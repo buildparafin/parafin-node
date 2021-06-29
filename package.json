@@ -1,0 +1,19 @@
+{
+  "name": "parafin-node",
+  "version": "1.0.0",
+  "description": "A node.js client for the Parafin API",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc --outDir dist/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/buildparafin/parafin-node.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/buildparafin/parafin-node/issues"
+  },
+  "homepage": "https://github.com/buildparafin/parafin-node#readme"
+}
