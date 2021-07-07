@@ -2,7 +2,7 @@ import R from 'ramda';
 
 import { parafinEnvironments } from './parafinEnvironments';
 import { parafinRequest } from './parafinRequest'
-import { ClientConfig } from './ClientConfig'; 
+import { ClientConfig } from './ClientConfig';
 
 // Default version of Parafin API, if not specified by the client.
 const DEFAULT_VERSION = '2021-07-01';
@@ -10,8 +10,8 @@ const DEFAULT_VERSION = '2021-07-01';
 function Client(this: any, configs: ClientConfig) {
   if (!R.is(Object, configs)) {
     throw new Error('Unexpected parameter type. ' +
-    'Refer to github.com/buildparafin/parafin-node ' +
-    'for how to create a Parafin client.');
+      'Refer to github.com/buildparafin/parafin-node ' +
+      'for how to create a Parafin client.');
   }
 
   if (R.isNil(configs.clientId)) {
@@ -46,7 +46,7 @@ function Client(this: any, configs: ClientConfig) {
 }
 
 // Private
-var requestWithAccessToken = function(path: string) {
+var requestWithAccessToken = function (path: string) {
   return (access_token: string, options: any, callback: any) => {
     return this.prototype._authenticatedRequest({
       path: path,
@@ -68,7 +68,7 @@ Client.prototype._authenticatedRequest =
       requestSpec.body.options = options;
     }
 
-    var context = R.merge({env: this.env}, {
+    var context = R.merge({ env: this.env }, {
       client_id: this.client_id,
       secret: this.secret,
     });
