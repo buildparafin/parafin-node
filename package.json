@@ -2,7 +2,7 @@
   "name": "parafin-node",
   "version": "1.0.0",
   "description": "A node.js client for the Parafin API",
-  "main": "src/index.ts",
+  "main": "src/parafin.ts",
   "scripts": {
     "build": "tsc --outDir dist/"
   },
@@ -15,5 +15,13 @@
   "bugs": {
     "url": "https://github.com/buildparafin/parafin-node/issues"
   },
-  "homepage": "https://github.com/buildparafin/parafin-node#readme"
+  "homepage": "https://github.com/buildparafin/parafin-node#readme",
+  "dependencies": {
+    "@types/bluebird": "^3.5.36",
+    "axios": "^0.21.1",
+    "ramda": "^0.27.1"
+  },
+  "devDependencies": {
+    "@types/ramda": "^0.27.42"
+  }
 }
