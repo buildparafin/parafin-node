@@ -23,7 +23,7 @@ function Client(this: any, configs: ClientConfig) {
   }
 
   if (!R.any(R.equals(configs.environment), R.values(parafinEnvironments))) {
-    throw new Error('Invalid Plaid environment');
+    throw new Error('Invalid Parafin environment');
   }
 
   if (arguments.length > 1) {
