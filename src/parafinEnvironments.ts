@@ -1,8 +1,6 @@
 var parafinEnvironments = {
-  production: 'https://production.parafin.com',
-  development: 'https://development.parafin.com'
+  production: 'https://api.parafin.com',
+  development: 'https://api.dev.parafin.com',
 };
 
-export {
-  parafinEnvironments
-};
+export { parafinEnvironments }

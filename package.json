@@ -4,7 +4,8 @@
   "description": "A node.js client for the Parafin API",
   "main": "src/parafin.ts",
   "scripts": {
-    "build": "tsc --outDir dist/"
+    "build": "tsc --outDir dist/",
+    "lint": "eslint \"**/*.ts\""
   },
   "keywords": [
     "parafin",
@@ -21,11 +22,14 @@
   },
   "homepage": "https://github.com/buildparafin/parafin-node#readme",
   "dependencies": {
-    "@types/bluebird": "^3.5.36",
     "axios": "^0.21.1",
     "ramda": "^0.27.1"
   },
   "devDependencies": {
-    "@types/ramda": "^0.27.42"
+    "@types/ramda": "^0.27.42",
+    "@typescript-eslint/eslint-plugin": "^4.28.2",
+    "@typescript-eslint/parser": "^4.28.2",
+    "eslint": "^7.30.0",
+    "typescript": "^4.3.5"
   }
 }

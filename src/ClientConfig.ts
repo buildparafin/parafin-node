@@ -1,14 +1,12 @@
 type ClientConfig = {
-  clientId: string;
-  secret: number;
-  environment: string;
-  options: ConfigOptions | null;
+  clientId: string
+  secret: number
+  environment: string
+  options: ConfigOptions | null
 }
 
 type ConfigOptions = {
-  version?: string;
+  version?: string
 }
 
-export {
-  ClientConfig
-};
+export { ClientConfig }
