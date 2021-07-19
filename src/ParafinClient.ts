@@ -47,12 +47,14 @@ function Client(this: any, configs: ClientConfig) {
   this.client_request_opts = configs.options;
 }
 
+// Test purpose
 type ResponseA = {
   status: string,
   data: subA
   message: string,
 }
 
+// Test purpose
 type subA = {
   id: number,
   employee_name: string,
