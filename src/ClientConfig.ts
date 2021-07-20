@@ -1,12 +1,6 @@
 type ClientConfig = {
-  clientId: string
-  secret: number
+  token: string,
   environment: string
-  options: ConfigOptions | null
-}
-
-type ConfigOptions = {
-  version?: string
 }
 
 export { ClientConfig }
