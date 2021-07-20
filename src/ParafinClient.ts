@@ -4,7 +4,6 @@ import { ParafinEnvironments } from './ParafinEnvironments'
 import { parafinRequest } from './parafinRequest'
 import { ClientConfig } from './ClientConfig'
 
-
 class Client {
   config: ClientConfig
 
