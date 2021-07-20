@@ -1,5 +1,5 @@
 {
-  "name": "parafin-node",
+  "name": "@parafin/parafin-node",
   "version": "1.0.0",
   "description": "A node.js client for the Parafin API",
   "main": "src/parafin.ts",
