@@ -1,7 +1,7 @@
 import { any, equals, is, values } from 'ramda'
 
 import { ParafinEnvironments } from './ParafinEnvironments'
-import { parafinRequest } from './parafinRequest'
+import { request } from './request'
 import { ClientConfig } from './ClientConfig'
 
 class Client {
@@ -30,7 +30,7 @@ class Client {
   }
 
   partners() {
-    return parafinRequest('partners', this.config)
+    return request('partners', this.config)
   }
 }
 
