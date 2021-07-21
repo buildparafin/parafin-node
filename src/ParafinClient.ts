@@ -29,7 +29,11 @@ class Client {
   }
 
   async data() {
-    const data = await requestCombine(this.config, 'partners', 'cash_advance_offer_collections_v2')
+    const data = await requestCombine(
+      this.config, 
+      'partners', 
+      'cash_advance_offer_collections_v2',
+      'cash_advances')
     return data
   }
 
