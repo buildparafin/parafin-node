@@ -1,10 +1,10 @@
 {
   "name": "@parafin/parafin-node",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A node.js client for the Parafin API",
   "main": "src/parafin.ts",
   "scripts": {
-    "build": "tsc --outDir dist/",
+    "build": "tsc",
     "lint": "eslint \"**/*.ts\""
   },
   "keywords": [

@@ -5,11 +5,9 @@
     "strict": true,
     "noEmit": true,
     "declaration": true,
-    "outDir": "./dist"
   },
   "exclude": [
     "tests",
-    "dist",
     "node_modules"
   ]
 }
