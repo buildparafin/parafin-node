@@ -77,6 +77,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   const results = baseResponse(cashAdvance)
   const response: CashAdvanceResponse = {
     empty: true,
+    acceptedAmount: null,
     outstandingAmount: null,
     paidAmount: null,
     estimatedPayoffDate: null,
@@ -92,6 +93,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     const outstandingAmount = totalAmount - paidAmount
 
     response.empty = false
+    response.acceptedAmount = cashAdvance.amount
     response.outstandingAmount = String(outstandingAmount)
     response.paidAmount = cashAdvance.paid_amount
     response.estimatedPayoffDate = cashAdvance.estimated_repayment_date,
@@ -108,10 +110,11 @@ function createParafinResponse(
 ): ParafinResponse {
   const response: ParafinResponse = {
     id: "default",
-    opted: false,
+    opted: true,
     name: partner.name,
     slug: partner.slug,
     approvalAmount: offerCollection.approvalAmount,
+    acceptedAmount: cashAdvance.acceptedAmount,
     outstandingAmount: cashAdvance.outstandingAmount,
     paidAmount: cashAdvance.paidAmount,
     estimatedPayoffDate: cashAdvance.estimatedPayoffDate,

@@ -12,6 +12,7 @@ export interface OfferCollectionResponse extends BasicResponse {
 }
 
 export interface CashAdvanceResponse extends BasicResponse {
+  acceptedAmount: string | null
   outstandingAmount: string | null
   paidAmount: string | null
   estimatedPayoffDate: string | null
