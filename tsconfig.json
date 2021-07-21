@@ -5,11 +5,8 @@
     "strict": true,
     "noEmit": true,
     "declaration": true,
-    "outDir": "./dist"
+    "outDir": "build"
   },
-  "include": [
-    "src/**/*"
-  ],
   "exclude": [
     "tests",
     "node_modules",

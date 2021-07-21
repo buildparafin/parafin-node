@@ -4,12 +4,9 @@
   "description": "A node.js client for the Parafin API",
   "main": "src/parafin.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --outDir dist/",
     "lint": "eslint \"**/*.ts\""
   },
-  "files": [
-    "/dist"
-  ],
   "keywords": [
     "parafin",
     "parafin.js"
