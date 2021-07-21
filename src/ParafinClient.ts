@@ -1,4 +1,5 @@
-import { request } from './request'
+import { request, requestCombine } from './request'
+import { cashAdvanceResponse, offerCollectionResponse, partnerResponse } from './responseManager'
 import { ClientConfig, ParafinEnvironments } from './types'
 
 class Client {
@@ -27,8 +28,24 @@ class Client {
     }
   }
 
-  partners() {
-    return request('partners', this.config)
+  async data() {
+    const data = await requestCombine(this.config, 'partners', 'cash_advance_offer_collections_v2')
+    return data
+  }
+
+  async partners() {
+    const partner = partnerResponse(await request('partners', this.config))
+    return partner
+  }
+
+  async offerCollection() {
+    const offerCollection = offerCollectionResponse(await request('cash_advance_offer_collections_v2', this.config))
+    return offerCollection
+  }
+
+  async cashAdvance() {
+    const cashAdvance = cashAdvanceResponse(await request('cash_advances', this.config))
+    return cashAdvance
   }
 }
 
