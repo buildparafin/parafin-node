@@ -1,8 +1,7 @@
 import { any, equals, is, values } from 'ramda'
 
-import { ParafinEnvironments } from './ParafinEnvironments'
 import { request } from './request'
-import { ClientConfig } from './ClientConfig'
+import { ClientConfig, ParafinEnvironments } from './types'
 
 class Client {
   config: ClientConfig
