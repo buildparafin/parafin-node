@@ -1,5 +1,3 @@
-import { any, equals, is, values } from 'ramda'
-
 import { request } from './request'
 import { ClientConfig, ParafinEnvironments } from './types'
 
@@ -11,7 +9,7 @@ class Client {
   }
 
   validateInput() {
-    if (!is(Object, this.config)) {
+    if (typeof this.config !== 'object' || this.config === null) {
       throw new Error(
         'Unexpected parameter type. ' +
           'Refer to github.com/buildparafin/parafin-node ' +
@@ -19,7 +17,8 @@ class Client {
       )
     }
   
-    if (!any(equals(this.config.environment), values(ParafinEnvironments))) {
+    if (this.config.environment !== ParafinEnvironments.development 
+      || this.config.environment !== ParafinEnvironments.production) {
       throw new Error('Invalid Parafin environment')
     }
   
