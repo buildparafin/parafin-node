@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { type } from 'ramda'
-import { ClientConfig } from './ClientConfig'
-import { ParafinError } from './ParafinError'
+import { ClientConfig } from './types'
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {

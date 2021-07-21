@@ -1,5 +1,4 @@
-import { ParafinEnvironments } from './ParafinEnvironments';
-import { Client } from './ParafinClient';
-import { ParafinError } from './ParafinError';
+import { Client } from './ParafinClient'
 
-export { ParafinEnvironments, Client, ParafinError };
+export { Client }
+export * from './types'
