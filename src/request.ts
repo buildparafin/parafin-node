@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { type } from 'ramda'
 import { ClientConfig } from './types'
 
 // TODO: Add later handling of the response
