@@ -1,5 +1,34 @@
+export interface BasicResponse {
+  empty: boolean
+}
+
+export interface PartnerResponse extends BasicResponse {
+  name: string | null
+  slug: string | null
+}
+
+export interface OfferCollectionResponse extends BasicResponse {
+  approvalAmount: string | null
+}
+
+export interface CashAdvanceResponse extends BasicResponse {
+  acceptedAmount: string | null
+  outstandingAmount: string | null
+  paidAmount: string | null
+  estimatedPayoffDate: string | null
+  verified: boolean | null
+}
+
+export interface ParafinResponse extends 
+PartnerResponse, 
+OfferCollectionResponse, 
+CashAdvanceResponse {
+  id: string
+  opted: boolean
+}
+
 export type ClientConfig = {
-  token: string,
+  token: string
   environment: string
 }
 

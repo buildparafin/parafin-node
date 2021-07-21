@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { ClientConfig } from './types'
+import { cashAdvanceResponse, createParafinResponse, offerCollectionResponse, partnerResponse } from './responseManager'
+import { ClientConfig, ParafinResponse } from './types'
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
@@ -39,6 +40,33 @@ function formatToken(token: string) {
   return `Bearer ${token}`
 }
 
+async function requestCombine(config: ClientConfig, ...endpoints: string[]): Promise<ParafinResponse> {
+  const requests = endpoints.map(endpoint => axios.get(`${config.environment}/${endpoint}`, {
+    headers: {
+      authorization: formatToken(config.token)
+    },
+  }))
+
+  const result = axios.all(requests).then(axios.spread((
+    partner, 
+    offerCollection,
+    cashAdvance) => {
+      const partnerTemp = partnerResponse(partner)
+      const offerTemp = offerCollectionResponse(offerCollection)
+      const advanceTemp = cashAdvanceResponse(cashAdvance)
+
+      const parafinResponse = createParafinResponse(
+        partnerTemp,
+        offerTemp,
+        advanceTemp
+      )
+
+    return parafinResponse
+  }))
+
+  return result
+}
+
 async function request(endpoint: string, config: ClientConfig) {
   const response = await axios.get(`${config.environment}/${endpoint}`, {
     headers: {
@@ -46,7 +74,7 @@ async function request(endpoint: string, config: ClientConfig) {
     },
   })
 
-  return response.data
+  return response
 }
 
-export { request }
+export { request, requestCombine }
