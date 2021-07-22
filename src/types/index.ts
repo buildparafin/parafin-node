@@ -19,7 +19,10 @@ export interface CashAdvanceResponse extends BasicResponse {
   verified: boolean | null
 }
 
-export interface ParafinResponse extends PartnerResponse, OfferCollectionResponse, CashAdvanceResponse {
+export interface ParafinResponse
+  extends PartnerResponse,
+    OfferCollectionResponse,
+    CashAdvanceResponse {
   id: string
   opted: boolean
 }

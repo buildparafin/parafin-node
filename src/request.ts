@@ -1,5 +1,10 @@
 import axios from 'axios'
-import { cashAdvanceResponse, createParafinResponse, offerCollectionResponse, partnerResponse } from './responseManager'
+import {
+  cashAdvanceResponse,
+  createParafinResponse,
+  offerCollectionResponse,
+  partnerResponse,
+} from './responseManager'
 import { ClientConfig, ParafinResponse } from './types'
 
 // TODO: Add later handling of the response
@@ -40,13 +45,16 @@ function formatToken(token: string) {
   return `Bearer ${token}`
 }
 
-async function requestCombine(config: ClientConfig, ...endpoints: string[]): Promise<ParafinResponse> {
+async function requestCombine(
+  config: ClientConfig,
+  ...endpoints: string[]
+): Promise<ParafinResponse> {
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
       headers: {
         authorization: formatToken(config.token),
       },
-    }),
+    })
   )
 
   const result = axios.all(requests).then(
@@ -55,10 +63,14 @@ async function requestCombine(config: ClientConfig, ...endpoints: string[]): Pro
       const offerTemp = offerCollectionResponse(offerCollection)
       const advanceTemp = cashAdvanceResponse(cashAdvance)
 
-      const parafinResponse = createParafinResponse(partnerTemp, offerTemp, advanceTemp)
+      const parafinResponse = createParafinResponse(
+        partnerTemp,
+        offerTemp,
+        advanceTemp
+      )
 
       return parafinResponse
-    }),
+    })
   )
 
   return result

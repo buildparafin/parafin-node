@@ -1,8 +1,18 @@
 import { AxiosResponse } from 'axios'
-import { CashAdvanceResponse, OfferCollectionResponse, ParafinResponse, PartnerResponse } from './types'
+import {
+  CashAdvanceResponse,
+  OfferCollectionResponse,
+  ParafinResponse,
+  PartnerResponse,
+} from './types'
 
 function baseResponse(response: AxiosResponse) {
-  if (response == null || response == undefined || response.data == null || response.data == undefined) {
+  if (
+    response == null ||
+    response == undefined ||
+    response.data == null ||
+    response.data == undefined
+  ) {
     return null
   }
 
@@ -33,7 +43,9 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
   return response
 }
 
-function offerCollectionResponse(offerCollection: AxiosResponse): OfferCollectionResponse {
+function offerCollectionResponse(
+  offerCollection: AxiosResponse
+): OfferCollectionResponse {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
     empty: true,
@@ -92,7 +104,8 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     response.acceptedAmount = cashAdvance.amount
     response.outstandingAmount = String(outstandingAmount)
     response.paidAmount = cashAdvance.paid_amount
-    ;(response.estimatedPayoffDate = cashAdvance.estimated_repayment_date), (response.verified = cashAdvance.verified)
+    ;(response.estimatedPayoffDate = cashAdvance.estimated_repayment_date),
+      (response.verified = cashAdvance.verified)
   }
 
   return response
@@ -101,7 +114,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
 function createParafinResponse(
   partner: PartnerResponse,
   offerCollection: OfferCollectionResponse,
-  cashAdvance: CashAdvanceResponse,
+  cashAdvance: CashAdvanceResponse
 ): ParafinResponse {
   const response: ParafinResponse = {
     id: 'default',
@@ -120,4 +133,9 @@ function createParafinResponse(
   return response
 }
 
-export { partnerResponse, offerCollectionResponse, cashAdvanceResponse, createParafinResponse }
+export {
+  partnerResponse,
+  offerCollectionResponse,
+  cashAdvanceResponse,
+  createParafinResponse,
+}
