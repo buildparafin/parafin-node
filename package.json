@@ -5,7 +5,7 @@
   "main": "src/parafin.ts",
   "scripts": {
     "build": "tsc --outDir dist/",
-    "lint": "eslint \"**/*.ts\""
+    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "keywords": [
     "parafin",
@@ -25,6 +25,8 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "^2.3.2",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
     "eslint": "^7.30.0",

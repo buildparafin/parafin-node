@@ -1,4 +1,4 @@
-import { Client } from './ParafinClient'
+import { Client } from './ParafinClient';
 
-export { Client }
-export * from './types'
+export { Client };
+export * from './types';

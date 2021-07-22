@@ -1,6 +1,11 @@
-import axios from 'axios'
-import { cashAdvanceResponse, createParafinResponse, offerCollectionResponse, partnerResponse } from './responseManager'
-import { ClientConfig, ParafinResponse } from './types'
+import axios from 'axios';
+import {
+  cashAdvanceResponse,
+  createParafinResponse,
+  offerCollectionResponse,
+  partnerResponse,
+} from './responseManager';
+import { ClientConfig, ParafinResponse } from './types';
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
@@ -37,44 +42,41 @@ import { ClientConfig, ParafinResponse } from './types'
 // }
 
 function formatToken(token: string) {
-  return `Bearer ${token}`
+  return `Bearer ${token}`;
 }
 
 async function requestCombine(config: ClientConfig, ...endpoints: string[]): Promise<ParafinResponse> {
-  const requests = endpoints.map(endpoint => axios.get(`${config.environment}/${endpoint}`, {
-    headers: {
-      authorization: formatToken(config.token)
-    },
-  }))
+  const requests = endpoints.map((endpoint) =>
+    axios.get(`${config.environment}/${endpoint}`, {
+      headers: {
+        authorization: formatToken(config.token),
+      },
+    }),
+  );
 
-  const result = axios.all(requests).then(axios.spread((
-    partner, 
-    offerCollection,
-    cashAdvance) => {
-      const partnerTemp = partnerResponse(partner)
-      const offerTemp = offerCollectionResponse(offerCollection)
-      const advanceTemp = cashAdvanceResponse(cashAdvance)
+  const result = axios.all(requests).then(
+    axios.spread((partner, offerCollection, cashAdvance) => {
+      const partnerTemp = partnerResponse(partner);
+      const offerTemp = offerCollectionResponse(offerCollection);
+      const advanceTemp = cashAdvanceResponse(cashAdvance);
 
-      const parafinResponse = createParafinResponse(
-        partnerTemp,
-        offerTemp,
-        advanceTemp
-      )
+      const parafinResponse = createParafinResponse(partnerTemp, offerTemp, advanceTemp);
 
-    return parafinResponse
-  }))
+      return parafinResponse;
+    }),
+  );
 
-  return result
+  return result;
 }
 
 async function request(endpoint: string, config: ClientConfig) {
   const response = await axios.get(`${config.environment}/${endpoint}`, {
     headers: {
-      authorization: formatToken(config.token)
+      authorization: formatToken(config.token),
     },
-  })
+  });
 
-  return response
+  return response;
 }
 
-export { request, requestCombine }
+export { request, requestCombine };
