@@ -3,7 +3,7 @@ import {
   cashAdvanceResponse,
   createParafinResponse,
   offerCollectionResponse,
-  partnerResponse,
+  partnerResponse
 } from './responseManager'
 import { ClientConfig, ParafinResponse } from './types'
 
@@ -52,8 +52,8 @@ async function requestCombine(
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
       headers: {
-        authorization: formatToken(config.token),
-      },
+        authorization: formatToken(config.token)
+      }
     })
   )
 
@@ -79,8 +79,8 @@ async function requestCombine(
 async function request(endpoint: string, config: ClientConfig) {
   const response = await axios.get(`${config.environment}/${endpoint}`, {
     headers: {
-      authorization: formatToken(config.token),
-    },
+      authorization: formatToken(config.token)
+    }
   })
 
   return response

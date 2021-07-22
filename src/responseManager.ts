@@ -3,7 +3,7 @@ import {
   CashAdvanceResponse,
   OfferCollectionResponse,
   ParafinResponse,
-  PartnerResponse,
+  PartnerResponse
 } from './types'
 
 function baseResponse(response: AxiosResponse) {
@@ -31,7 +31,7 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
   const response: PartnerResponse = {
     empty: true,
     name: null,
-    slug: null,
+    slug: null
   }
 
   if (results != null) {
@@ -49,7 +49,7 @@ function offerCollectionResponse(
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
     empty: true,
-    approvalAmount: null,
+    approvalAmount: null
   }
 
   if (results != null) {
@@ -89,7 +89,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     outstandingAmount: null,
     paidAmount: null,
     estimatedPayoffDate: null,
-    verified: null,
+    verified: null
   }
 
   if (results != null) {
@@ -127,7 +127,7 @@ function createParafinResponse(
     paidAmount: cashAdvance.paidAmount,
     estimatedPayoffDate: cashAdvance.estimatedPayoffDate,
     verified: cashAdvance.verified,
-    empty: partner.empty && offerCollection.empty && cashAdvance.empty,
+    empty: partner.empty && offerCollection.empty && cashAdvance.empty
   }
 
   return response
@@ -137,5 +137,5 @@ export {
   partnerResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
-  createParafinResponse,
+  createParafinResponse
 }

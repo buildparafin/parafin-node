@@ -2,7 +2,7 @@ import { request, requestCombine } from './request'
 import {
   cashAdvanceResponse,
   offerCollectionResponse,
-  partnerResponse,
+  partnerResponse
 } from './responseManager'
 import { ClientConfig, ParafinEnvironments } from './types'
 

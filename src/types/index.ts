@@ -34,7 +34,7 @@ export type ClientConfig = {
 
 export const ParafinEnvironments = {
   production: 'https://api.parafin.com',
-  development: 'https://api.dev.parafin.com',
+  development: 'https://api.dev.parafin.com'
 }
 
 export class ParafinError extends Error {
