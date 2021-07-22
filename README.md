@@ -1,4 +1,4 @@
-# parafin-node
+# parafin-node [![.github/workflows/build.yml](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml/badge.svg)](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml)
 
 A node.js client library for the Parafin API.
 
