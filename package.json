@@ -1,6 +1,6 @@
 {
   "name": "@parafin/parafin-node",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A node.js client for the Parafin API",
   "main": "src/parafin.ts",
   "scripts": {
