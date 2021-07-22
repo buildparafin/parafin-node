@@ -5,10 +5,8 @@ A node.js client library for the Parafin API.
 ## Getting started
 
 The module supports all Parafin API endpoints.  For complete information about the API, head
-to the docs.
-
-All endpoints require a valid `client_id` and `secret` to
-access and are accessible from a valid instance of a Parafin `Client`:
+to the docs. All endpoints require a valid `client_id` and `secret` to access and are 
+accessible from a valid instance of a Parafin client object:
 
 ```javascript
 import * as parafin from './parafin'
