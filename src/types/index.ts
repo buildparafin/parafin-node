@@ -23,7 +23,6 @@ export interface ParafinResponse extends
 PartnerResponse, 
 OfferCollectionResponse, 
 CashAdvanceResponse {
-  id: string
   opted: boolean
 }
 

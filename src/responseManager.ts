@@ -85,9 +85,12 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   } 
 
   if (results != null) {
-    // We assume here they always have one active cash advance at a time
-    const cashAdvance = results[0]
+    const outstandingAdvances = results.filter(element => element.state === 'outstanding')
+    if (!outstandingAdvances.length) {
+      return response
+    }
 
+    const cashAdvance = outstandingAdvances[0]
     const totalAmount: number = +cashAdvance.total_repayment_amount
     const paidAmount: number = +cashAdvance.paid_amount
     const outstandingAmount = totalAmount - paidAmount
@@ -109,7 +112,6 @@ function createParafinResponse(
   cashAdvance: CashAdvanceResponse
 ): ParafinResponse {
   const response: ParafinResponse = {
-    id: "default",
     opted: true,
     name: partner.name,
     slug: partner.slug,
