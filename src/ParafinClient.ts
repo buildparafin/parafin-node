@@ -1,5 +1,9 @@
 import { request, requestCombine } from './request'
-import { cashAdvanceResponse, offerCollectionResponse, partnerResponse } from './responseManager'
+import {
+  cashAdvanceResponse,
+  offerCollectionResponse,
+  partnerResponse
+} from './responseManager'
 import { ClientConfig, ParafinEnvironments } from './types'
 
 class Client {
@@ -14,15 +18,17 @@ class Client {
       throw new Error(
         'Unexpected parameter type. ' +
           'Refer to github.com/buildparafin/parafin-node ' +
-          'for how to create a Parafin client.',
+          'for how to create a Parafin client.'
       )
     }
-  
-    if (this.config.environment !== ParafinEnvironments.development 
-      || this.config.environment !== ParafinEnvironments.production) {
+
+    if (
+      this.config.environment !== ParafinEnvironments.development ||
+      this.config.environment !== ParafinEnvironments.production
+    ) {
       throw new Error('Invalid Parafin environment')
     }
-  
+
     if (arguments.length > 1) {
       throw new Error('Too many arguments to constructor')
     }
@@ -30,10 +36,11 @@ class Client {
 
   async data() {
     const data = await requestCombine(
-      this.config, 
-      'partners', 
+      this.config,
+      'partners',
       'cash_advance_offer_collections_v2',
-      'cash_advances')
+      'cash_advances'
+    )
     return data
   }
 
@@ -43,12 +50,16 @@ class Client {
   }
 
   async offerCollection() {
-    const offerCollection = offerCollectionResponse(await request('cash_advance_offer_collections_v2', this.config))
+    const offerCollection = offerCollectionResponse(
+      await request('cash_advance_offer_collections_v2', this.config)
+    )
     return offerCollection
   }
 
   async cashAdvance() {
-    const cashAdvance = cashAdvanceResponse(await request('cash_advances', this.config))
+    const cashAdvance = cashAdvanceResponse(
+      await request('cash_advances', this.config)
+    )
     return cashAdvance
   }
 }

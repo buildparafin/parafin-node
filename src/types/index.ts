@@ -19,10 +19,10 @@ export interface CashAdvanceResponse extends BasicResponse {
   verified: boolean | null
 }
 
-export interface ParafinResponse extends 
-PartnerResponse, 
-OfferCollectionResponse, 
-CashAdvanceResponse {
+export interface ParafinResponse
+  extends PartnerResponse,
+    OfferCollectionResponse,
+    CashAdvanceResponse {
   opted: boolean
 }
 
@@ -33,7 +33,7 @@ export type ClientConfig = {
 
 export const ParafinEnvironments = {
   production: 'https://api.parafin.com',
-  development: 'https://api.dev.parafin.com',
+  development: 'https://api.dev.parafin.com'
 }
 
 export class ParafinError extends Error {

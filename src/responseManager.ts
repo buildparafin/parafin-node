@@ -1,11 +1,18 @@
 import { AxiosResponse } from 'axios'
-import { CashAdvanceResponse, OfferCollectionResponse, ParafinResponse, PartnerResponse } from './types'
+import {
+  CashAdvanceResponse,
+  OfferCollectionResponse,
+  ParafinResponse,
+  PartnerResponse
+} from './types'
 
 function baseResponse(response: AxiosResponse) {
-  if (response == null
-    || response == undefined
-    || response.data == null 
-    || response.data == undefined) {
+  if (
+    response == null ||
+    response == undefined ||
+    response.data == null ||
+    response.data == undefined
+  ) {
     return null
   }
 
@@ -25,7 +32,7 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
     empty: true,
     name: null,
     slug: null
-  } 
+  }
 
   if (results != null) {
     response.empty = false
@@ -36,15 +43,17 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
   return response
 }
 
-function offerCollectionResponse(offerCollection: AxiosResponse): OfferCollectionResponse {
+function offerCollectionResponse(
+  offerCollection: AxiosResponse
+): OfferCollectionResponse {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
     empty: true,
     approvalAmount: null
-  } 
+  }
 
   if (results != null) {
-    const openCollection = results.filter(element => element.open)
+    const openCollection = results.filter((element) => element.open)
     if (!openCollection.length) {
       return response
     }
@@ -62,7 +71,6 @@ function offerCollectionResponse(offerCollection: AxiosResponse): OfferCollectio
     // The chunks are already sorted
     const maxAmountRange = chunks[chunks.length - 1].amount_range
     if (!maxAmountRange.length) {
-
       return response
     }
 
@@ -82,7 +90,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     paidAmount: null,
     estimatedPayoffDate: null,
     verified: null
-  } 
+  }
 
   if (results != null) {
     const outstandingAdvances = results.filter(element => element.state === 'outstanding')
@@ -99,8 +107,8 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     response.acceptedAmount = cashAdvance.amount
     response.outstandingAmount = String(outstandingAmount)
     response.paidAmount = cashAdvance.paid_amount
-    response.estimatedPayoffDate = cashAdvance.estimated_repayment_date,
-    response.verified = cashAdvance.verified
+    ;(response.estimatedPayoffDate = cashAdvance.estimated_repayment_date),
+      (response.verified = cashAdvance.verified)
   }
 
   return response
@@ -121,13 +129,13 @@ function createParafinResponse(
     paidAmount: cashAdvance.paidAmount,
     estimatedPayoffDate: cashAdvance.estimatedPayoffDate,
     verified: cashAdvance.verified,
-    empty: (partner.empty && offerCollection.empty && cashAdvance.empty)
-  } 
+    empty: partner.empty && offerCollection.empty && cashAdvance.empty
+  }
 
   return response
 }
 
-export { 
+export {
   partnerResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
