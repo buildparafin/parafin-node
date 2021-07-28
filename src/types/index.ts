@@ -7,6 +7,10 @@ export interface PartnerResponse extends BasicResponse {
   partnerSlug: string | null
 }
 
+export interface BusinessResponse extends BasicResponse {
+  businessId: string | null
+}
+
 export interface OfferCollectionResponse extends BasicResponse {
   approvalAmount: string | null
 }
@@ -21,6 +25,7 @@ export interface CashAdvanceResponse extends BasicResponse {
 
 export interface ParafinResponse
   extends PartnerResponse,
+    BusinessResponse,
     OfferCollectionResponse,
     CashAdvanceResponse {
   opted: boolean

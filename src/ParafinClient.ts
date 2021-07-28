@@ -38,6 +38,7 @@ class Client {
     const data = await requestCombine(
       this.config,
       'partners',
+      'businesses',
       'cash_advance_offer_collections_v2',
       'cash_advances'
     )

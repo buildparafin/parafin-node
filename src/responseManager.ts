@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
 import {
+  BusinessResponse,
   CashAdvanceResponse,
   OfferCollectionResponse,
   ParafinResponse,
@@ -38,6 +39,21 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
     response.empty = false
     response.partnerName = results[0].name
     response.partnerSlug = results[0].slug
+  }
+
+  return response
+}
+
+function businessResponse(business: AxiosResponse): BusinessResponse {
+  const results = baseResponse(business)
+  const response: BusinessResponse = {
+    empty: true,
+    businessId: null
+  }
+
+  if (results != null) {
+    response.empty = false
+    response.businessId = results[0].id
   }
 
   return response
@@ -118,11 +134,13 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
 
 function createParafinResponse(
   partner: PartnerResponse,
+  business: BusinessResponse,
   offerCollection: OfferCollectionResponse,
   cashAdvance: CashAdvanceResponse
 ): ParafinResponse {
   const response: ParafinResponse = {
     opted: true,
+    businessId: business.businessId,
     partnerName: partner.partnerName,
     partnerSlug: partner.partnerSlug,
     approvalAmount: offerCollection.approvalAmount,
@@ -139,6 +157,7 @@ function createParafinResponse(
 
 export {
   partnerResponse,
+  businessResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
   createParafinResponse
