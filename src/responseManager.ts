@@ -30,14 +30,14 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
   const results = baseResponse(partner)
   const response: PartnerResponse = {
     empty: true,
-    name: null,
-    slug: null
+    partnerName: null,
+    partnerSlug: null
   }
 
   if (results != null) {
     response.empty = false
-    response.name = results[0].name
-    response.slug = results[0].slug
+    response.partnerName = results[0].name
+    response.partnerSlug = results[0].slug
   }
 
   return response
@@ -93,7 +93,9 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   }
 
   if (results != null) {
-    const outstandingAdvances = results.filter(element => element.state === 'outstanding')
+    const outstandingAdvances = results.filter(
+      (element) => element.state === 'outstanding'
+    )
     if (!outstandingAdvances.length) {
       return response
     }
@@ -121,8 +123,8 @@ function createParafinResponse(
 ): ParafinResponse {
   const response: ParafinResponse = {
     opted: true,
-    name: partner.name,
-    slug: partner.slug,
+    partnerName: partner.partnerName,
+    partnerSlug: partner.partnerSlug,
     approvalAmount: offerCollection.approvalAmount,
     acceptedAmount: cashAdvance.acceptedAmount,
     outstandingAmount: cashAdvance.outstandingAmount,

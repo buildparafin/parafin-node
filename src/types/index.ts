@@ -3,8 +3,8 @@ export interface BasicResponse {
 }
 
 export interface PartnerResponse extends BasicResponse {
-  name: string | null
-  slug: string | null
+  partnerName: string | null
+  partnerSlug: string | null
 }
 
 export interface OfferCollectionResponse extends BasicResponse {
