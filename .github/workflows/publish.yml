@@ -31,9 +31,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           
-      - name: Commit changes
-        run: git commit -m "Increase patch version" -a
-          
       - name: Push to repo
         uses: ad-m/github-push-action@master
         with:
