@@ -1,4 +1,4 @@
-# parafin-node [![.github/workflows/build.yml](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml/badge.svg)](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml)
+# parafin-node
 
 A node.js client library for the Parafin API.
 
@@ -47,3 +47,6 @@ npm run lint
 ```console
 npx ts-node src/parafin.ts
 ```
+
+## Publish
+To the package, you can go to the repo tabs **Actions**, select the **Publish** workflow, and then select **Run workflow**.
