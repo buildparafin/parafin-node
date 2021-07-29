@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v2
 
@@ -30,24 +30,11 @@ jobs:
 #         run: npm publish
 #         env:
 #           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      - name: Temporarily disable "Include Administrators" branch protection
-        uses: benjefferies/branch-protection-bot@master
-        if: always()
-        with:
-          access-token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Push to repo
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.BOT_ADMIN_TOKEN }}
           branch: ${{ github.ref }}
           force: true
-   
-      - name: Enable "Include Administrators" branch protection
-        uses: benjefferies/branch-protection-bot@master
-        if: always()
-        with:
-          access-token: ${{ secrets.GITHUB_TOKEN }}
-          owner: elmurati
-          repo: buildparafin/parafin-node
