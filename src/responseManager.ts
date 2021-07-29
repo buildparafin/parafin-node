@@ -93,7 +93,9 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   }
 
   if (results != null) {
-    const outstandingAdvances = results.filter(element => element.state === 'outstanding')
+    const outstandingAdvances = results.filter(
+      (element) => element.state === 'outstanding'
+    )
     if (!outstandingAdvances.length) {
       return response
     }
