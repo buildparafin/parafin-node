@@ -2,27 +2,38 @@ name: Publish
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup node 12 and .npmrc file to publish to npm
+      - name: Setup node 12 and .npmrc file
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
           registry-url: 'https://registry.npmjs.org'
+          
+      - name: Config github
+        run: |
+          git config --global user.name "GitHub Publish Bot"
+          git config --global user.email "ernel@parafin.com"
 
-      - name: Update version
-      - run: npm version patch
-
-      - name: Publish
-      - run: npm publish
-          env:
+      - name: Increase patch version
+        run: npm version patch
+        env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Publish NPM package
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          
+      - name: Push to repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
+          force: true
