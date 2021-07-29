@@ -1,6 +1,15 @@
 name: Build
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+    types:
+      - ready_for_review
+      - review_requested
 
 jobs:
   build:
