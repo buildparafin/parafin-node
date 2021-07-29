@@ -53,7 +53,7 @@ function businessResponse(business: AxiosResponse): BusinessResponse {
 
   if (results != null) {
     response.empty = false
-    response.businessId = results[0].id
+    response.businessId = results[0].external_id
   }
 
   return response
