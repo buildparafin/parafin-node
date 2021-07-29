@@ -19,7 +19,7 @@ jobs:
       - name: Config github
         run: |
           git config --global user.name "GitHub Publish Bot"
-          git config --global user.email "ernel@parafin.com"
+          git config --global user.email "ernel.murati@gmail.com"
 
       - name: Increase patch version
         run: npm version patch
