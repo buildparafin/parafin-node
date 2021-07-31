@@ -1,4 +1,4 @@
-# parafin-node
+# parafin-node [![Build](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml/badge.svg)](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml)
 
 A node.js client library for the Parafin API.
 
@@ -21,8 +21,8 @@ parafinClient.partner().then((data: any) => console.log(data))
 ```
 
 The `environment` parameter dictates which Parafin API environment you will access. Values are:
-- `parafin.ParafinEnvironments.production` - production use, makes requests on https://api.parafin.com
-- `parafin.ParafinEnvironments.development` - use for integration development and testing, makes requests on https://api.dev.parafin.com
+- `parafin.environment.production` - production use, makes requests on https://api.parafin.com
+- `parafin.environment.development` - use for integration development and testing, makes requests on https://api.dev.parafin.com
 
 ## Install
 
@@ -47,6 +47,3 @@ npm run lint
 ```console
 npx ts-node src/parafin.ts
 ```
-
-## Publish
-To the package, you can go to the repo tabs **Actions**, select the **Publish** workflow, and then select **Run workflow**.
