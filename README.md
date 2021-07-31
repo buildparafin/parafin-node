@@ -1,6 +1,6 @@
 # parafin-node [![Build](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml/badge.svg)](https://github.com/buildparafin/parafin-node/actions/workflows/build.yml)
 
-A node.js client library for the Parafin API.
+A node.js client library for the [Parafin API][2].
 
 ## Getting started
 
@@ -73,3 +73,15 @@ npm run lint
 ```console
 npx ts-node src/parafin.ts
 ```
+
+## Support
+Open an [issue][4]!
+
+## License
+[MIT][5]
+
+[1]: https://parafin.com
+[2]: https://docs.parafin.com
+[3]: https://github.com/buildparafin/react-parafin-elements#readme
+[4]: https://github.com/buildparafin/parafin-node/issues/new
+[5]: https://github.com/buildparafin/parafin-node/blob/main/LICENSE
