@@ -3,8 +3,12 @@ export interface BasicResponse {
 }
 
 export interface PartnerResponse extends BasicResponse {
-  name: string | null
-  slug: string | null
+  partnerName: string | null
+  partnerSlug: string | null
+}
+
+export interface BusinessResponse extends BasicResponse {
+  businessExternalId: string | null
 }
 
 export interface OfferCollectionResponse extends BasicResponse {
@@ -21,6 +25,7 @@ export interface CashAdvanceResponse extends BasicResponse {
 
 export interface ParafinResponse
   extends PartnerResponse,
+    BusinessResponse,
     OfferCollectionResponse,
     CashAdvanceResponse {
   opted: boolean
@@ -29,11 +34,6 @@ export interface ParafinResponse
 export type ClientConfig = {
   token: string
   environment: string
-}
-
-export const ParafinEnvironments = {
-  production: 'https://api.parafin.com',
-  development: 'https://api.dev.parafin.com'
 }
 
 export class ParafinError extends Error {
@@ -54,4 +54,9 @@ export type ParafinErrorType = {
   error_message?: string
   display_message?: string
   request_id?: string
+}
+
+export const environment = {
+  production: 'https://api.parafin.com',
+  development: 'https://api.dev.parafin.com'
 }

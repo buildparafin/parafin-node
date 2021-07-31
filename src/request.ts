@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 import {
+  businessResponse,
   cashAdvanceResponse,
   createParafinResponse,
   offerCollectionResponse,
@@ -61,15 +62,18 @@ async function requestCombine(
     axios.spread(
       (
         partner: AxiosResponse,
+        businesses: AxiosResponse,
         offerCollection: AxiosResponse,
         cashAdvance: AxiosResponse
       ) => {
         const partnerTemp = partnerResponse(partner)
+        const businessTemp = businessResponse(businesses)
         const offerTemp = offerCollectionResponse(offerCollection)
         const advanceTemp = cashAdvanceResponse(cashAdvance)
 
         const parafinResponse = createParafinResponse(
           partnerTemp,
+          businessTemp,
           offerTemp,
           advanceTemp
         )
