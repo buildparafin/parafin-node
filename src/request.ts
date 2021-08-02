@@ -7,7 +7,7 @@ import {
   partnerResponse,
   optInResponse
 } from './responseManager'
-import { ClientConfig, OptInResponse, ParafinResponse } from './types'
+import { ClientConfig, ParafinResponse } from './types'
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
