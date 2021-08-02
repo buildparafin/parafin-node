@@ -23,13 +23,16 @@ export interface CashAdvanceResponse extends BasicResponse {
   verified: boolean | null
 }
 
+export interface OptInResponse extends BasicResponse {
+  opted: boolean | null
+}
+
 export interface ParafinResponse
   extends PartnerResponse,
     BusinessResponse,
     OfferCollectionResponse,
-    CashAdvanceResponse {
-  opted: boolean
-}
+    CashAdvanceResponse,
+    OptInResponse {}
 
 export type ClientConfig = {
   token: string

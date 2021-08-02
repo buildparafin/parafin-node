@@ -3,6 +3,7 @@ import {
   BusinessResponse,
   CashAdvanceResponse,
   OfferCollectionResponse,
+  OptInResponse,
   ParafinResponse,
   PartnerResponse
 } from './types'
@@ -132,14 +133,35 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   return response
 }
 
+function optInResponse(optIn: AxiosResponse): OptInResponse {
+  const results = baseResponse(optIn)
+  const response: OptInResponse = {
+    empty: true,
+    opted: null
+  }
+
+  if (results != null) {
+    if (results.length > 0) {
+      response.empty = false
+      response.opted = true
+    } else {
+      response.empty = false
+      response.opted = false
+    }
+  }
+
+  return response
+}
+
 function createParafinResponse(
   partner: PartnerResponse,
   business: BusinessResponse,
   offerCollection: OfferCollectionResponse,
-  cashAdvance: CashAdvanceResponse
+  cashAdvance: CashAdvanceResponse,
+  optIn: OptInResponse
 ): ParafinResponse {
   const response: ParafinResponse = {
-    opted: true,
+    opted: optIn.opted,
     businessExternalId: business.businessExternalId,
     partnerName: partner.partnerName,
     partnerSlug: partner.partnerSlug,
@@ -160,5 +182,6 @@ export {
   businessResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
+  optInResponse,
   createParafinResponse
 }

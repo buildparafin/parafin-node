@@ -4,9 +4,10 @@ import {
   cashAdvanceResponse,
   createParafinResponse,
   offerCollectionResponse,
-  partnerResponse
+  partnerResponse,
+  optInResponse
 } from './responseManager'
-import { ClientConfig, ParafinResponse } from './types'
+import { ClientConfig, OptInResponse, ParafinResponse } from './types'
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
@@ -64,18 +65,21 @@ async function requestCombine(
         partner: AxiosResponse,
         businesses: AxiosResponse,
         offerCollection: AxiosResponse,
-        cashAdvance: AxiosResponse
+        cashAdvance: AxiosResponse,
+        optIn: AxiosResponse
       ) => {
         const partnerTemp = partnerResponse(partner)
         const businessTemp = businessResponse(businesses)
         const offerTemp = offerCollectionResponse(offerCollection)
         const advanceTemp = cashAdvanceResponse(cashAdvance)
+        const optInTemp = optInResponse(optIn)
 
         const parafinResponse = createParafinResponse(
           partnerTemp,
           businessTemp,
           offerTemp,
-          advanceTemp
+          advanceTemp,
+          optInTemp
         )
 
         return parafinResponse
