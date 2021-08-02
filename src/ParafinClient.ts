@@ -4,7 +4,7 @@ import {
   offerCollectionResponse,
   partnerResponse
 } from './responseManager'
-import { ClientConfig, ParafinEnvironments } from './types'
+import { ClientConfig, environment } from './types'
 
 class Client {
   config: ClientConfig
@@ -23,8 +23,8 @@ class Client {
     }
 
     if (
-      this.config.environment !== ParafinEnvironments.development ||
-      this.config.environment !== ParafinEnvironments.production
+      this.config.environment !== environment.development ||
+      this.config.environment !== environment.production
     ) {
       throw new Error('Invalid Parafin environment')
     }
@@ -38,6 +38,7 @@ class Client {
     const data = await requestCombine(
       this.config,
       'partners',
+      'businesses',
       'cash_advance_offer_collections_v2',
       'cash_advances'
     )
