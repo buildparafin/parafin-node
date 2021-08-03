@@ -53,6 +53,12 @@ export interface OptInAccountManager {
   email: string
 }
 
+export interface PostResponse {
+  status: number
+  statusText: string
+  data: string
+}
+
 export type ClientConfig = {
   token: string
   environment: string

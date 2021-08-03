@@ -5,7 +5,8 @@ import {
   OfferCollectionResponse,
   OptInResponse,
   ParafinResponse,
-  PartnerResponse
+  PartnerResponse,
+  PostResponse
 } from './types'
 
 function baseResponse(response: AxiosResponse) {
@@ -153,6 +154,24 @@ function optInResponse(optIn: AxiosResponse): OptInResponse {
   return response
 }
 
+function postResponse(postResponse: AxiosResponse): PostResponse {
+  const response: PostResponse = {
+    status: 0,
+    statusText: '',
+    data: ''
+  }
+
+  if (postResponse == null || postResponse == undefined) {
+    return response
+  }
+
+  response.status = postResponse.status
+  response.statusText = postResponse.statusText
+  response.data = response.data
+
+  return response
+}
+
 function createParafinResponse(
   partner: PartnerResponse,
   business: BusinessResponse,
@@ -183,5 +202,6 @@ export {
   offerCollectionResponse,
   cashAdvanceResponse,
   optInResponse,
+  postResponse,
   createParafinResponse
 }

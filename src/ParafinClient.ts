@@ -4,9 +4,10 @@ import {
   cashAdvanceResponse,
   offerCollectionResponse,
   optInResponse,
-  partnerResponse
+  partnerResponse,
+  postResponse
 } from './responseManager'
-import { ClientConfig, environment, OptInRequest, OptInResponse } from './types'
+import { ClientConfig, environment, OptInRequest } from './types'
 
 class Client {
   config: ClientConfig
@@ -78,7 +79,7 @@ class Client {
   }
 
   async postOptIn(data: OptInRequest) {
-    const optIn = await post('opt_ins', this.config, data)
+    const optIn = postResponse(await post('opt_ins', this.config, data))
     return optIn
   }
 }
