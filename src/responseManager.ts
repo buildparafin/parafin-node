@@ -167,7 +167,7 @@ function postResponse(postResponse: AxiosResponse): PostResponse {
 
   response.status = postResponse.status
   response.statusText = postResponse.statusText
-  response.data = response.data
+  response.data = postResponse.data
 
   return response
 }
