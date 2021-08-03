@@ -46,8 +46,27 @@ parafinClient.cashAdvance()
 // Receive optIn information
 parafinClient.optIn()
 
+const accountManager: parafin.AccountManager {
+  name: 'John Doe',
+  email: 'jdoe@mygym.com'
+}
+
+const data: parafin.OptInRequest = {
+  businessExternalId: 'externalId001',
+  businessName: 'The Chiseled Jalapeño',
+  ownerFirstName: 'John',
+  ownerLastName: 'Doe',
+  accountManagers: [
+    accountManager
+  ],
+  routingNumber: '12345678',
+  accountNumberLastFour: '0000',
+  email: 'jdoe@mygym.com',
+  postalCode: '12345'
+}
+
 // Post optIn information
-parafinClient.postOptIn()
+parafinClient.postOptIn(data)
 ```
 
 ## Install
