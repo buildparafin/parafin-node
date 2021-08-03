@@ -34,6 +34,25 @@ export interface ParafinResponse
     CashAdvanceResponse,
     OptInResponse {}
 
+export interface BasicRequest {}
+
+export interface OptInRequest extends BasicRequest {
+  businessExternalId: string
+  businessName: string
+  ownerFirstName: string
+  ownerLastName: string
+  accountManagers: OptInAccountManager[]
+  routingNumber: string
+  accountNumberLastFour: string
+  email: string
+  postalCode: string
+}
+
+export interface OptInAccountManager {
+  name: string
+  email: string
+}
+
 export type ClientConfig = {
   token: string
   environment: string

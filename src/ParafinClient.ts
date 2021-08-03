@@ -1,10 +1,12 @@
-import { request, requestCombine } from './request'
+import { post, get, getCombine } from './request'
 import {
+  businessResponse,
   cashAdvanceResponse,
   offerCollectionResponse,
+  optInResponse,
   partnerResponse
 } from './responseManager'
-import { ClientConfig, environment } from './types'
+import { ClientConfig, environment, OptInRequest, OptInResponse } from './types'
 
 class Client {
   config: ClientConfig
@@ -35,33 +37,49 @@ class Client {
   }
 
   async data() {
-    const data = await requestCombine(
+    const data = await getCombine(
       this.config,
       'partners',
       'businesses',
       'cash_advance_offer_collections_v2',
-      'cash_advances'
+      'cash_advances',
+      'opt_ins'
     )
     return data
   }
 
   async partners() {
-    const partner = partnerResponse(await request('partners', this.config))
+    const partner = partnerResponse(await get('partners', this.config))
     return partner
+  }
+
+  async businesses() {
+    const businesses = businessResponse(await get('businesses', this.config))
+    return businesses
   }
 
   async offerCollection() {
     const offerCollection = offerCollectionResponse(
-      await request('cash_advance_offer_collections_v2', this.config)
+      await get('cash_advance_offer_collections_v2', this.config)
     )
     return offerCollection
   }
 
   async cashAdvance() {
     const cashAdvance = cashAdvanceResponse(
-      await request('cash_advances', this.config)
+      await get('cash_advances', this.config)
     )
     return cashAdvance
+  }
+
+  async optIn() {
+    const optIn = optInResponse(await get('opt_ins', this.config))
+    return optIn
+  }
+
+  async postOptIn(data: OptInRequest) {
+    const optIn = await post('opt_ins', this.config, data)
+    return optIn
   }
 }
 

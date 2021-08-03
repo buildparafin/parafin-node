@@ -7,7 +7,7 @@ import {
   partnerResponse,
   optInResponse
 } from './responseManager'
-import { ClientConfig, ParafinResponse } from './types'
+import { BasicRequest, ClientConfig, ParafinResponse } from './types'
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
@@ -47,7 +47,7 @@ function formatToken(token: string) {
   return `Bearer ${token}`
 }
 
-async function requestCombine(
+async function getCombine(
   config: ClientConfig,
   ...endpoints: string[]
 ): Promise<ParafinResponse> {
@@ -90,7 +90,7 @@ async function requestCombine(
   return result
 }
 
-async function request(endpoint: string, config: ClientConfig) {
+async function get(endpoint: string, config: ClientConfig) {
   const response = await axios.get(`${config.environment}/${endpoint}`, {
     headers: {
       authorization: formatToken(config.token)
@@ -100,4 +100,18 @@ async function request(endpoint: string, config: ClientConfig) {
   return response
 }
 
-export { request, requestCombine }
+async function post(
+  endpoint: string,
+  config: ClientConfig,
+  data: BasicRequest
+) {
+  const response = await axios.post(`${config.environment}/${endpoint}`, data, {
+    headers: {
+      authorization: formatToken(config.token)
+    }
+  })
+
+  return response
+}
+
+export { get, post, getCombine }
