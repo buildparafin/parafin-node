@@ -1,12 +1,15 @@
 import axios, { AxiosResponse } from 'axios'
+import caseConverter from 'axios-case-converter'
+
 import {
   businessResponse,
   cashAdvanceResponse,
   createParafinResponse,
   offerCollectionResponse,
-  partnerResponse
+  partnerResponse,
+  optInResponse
 } from './responseManager'
-import { ClientConfig, ParafinResponse } from './types'
+import { BasicRequest, ClientConfig, ParafinResponse } from './types'
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
@@ -46,7 +49,7 @@ function formatToken(token: string) {
   return `Bearer ${token}`
 }
 
-async function requestCombine(
+async function getCombine(
   config: ClientConfig,
   ...endpoints: string[]
 ): Promise<ParafinResponse> {
@@ -64,18 +67,21 @@ async function requestCombine(
         partner: AxiosResponse,
         businesses: AxiosResponse,
         offerCollection: AxiosResponse,
-        cashAdvance: AxiosResponse
+        cashAdvance: AxiosResponse,
+        optIn: AxiosResponse
       ) => {
         const partnerTemp = partnerResponse(partner)
         const businessTemp = businessResponse(businesses)
         const offerTemp = offerCollectionResponse(offerCollection)
         const advanceTemp = cashAdvanceResponse(cashAdvance)
+        const optInTemp = optInResponse(optIn)
 
         const parafinResponse = createParafinResponse(
           partnerTemp,
           businessTemp,
           offerTemp,
-          advanceTemp
+          advanceTemp,
+          optInTemp
         )
 
         return parafinResponse
@@ -86,7 +92,7 @@ async function requestCombine(
   return result
 }
 
-async function request(endpoint: string, config: ClientConfig) {
+async function get(endpoint: string, config: ClientConfig) {
   const response = await axios.get(`${config.environment}/${endpoint}`, {
     headers: {
       authorization: formatToken(config.token)
@@ -96,4 +102,23 @@ async function request(endpoint: string, config: ClientConfig) {
   return response
 }
 
-export { request, requestCombine }
+async function post(
+  endpoint: string,
+  config: ClientConfig,
+  data: BasicRequest
+) {
+  const client = caseConverter(axios.create())
+  const response = await client.post(
+    `${config.environment}/${endpoint}`,
+    data,
+    {
+      headers: {
+        authorization: formatToken(config.token)
+      }
+    }
+  )
+
+  return response
+}
+
+export { get, post, getCombine }

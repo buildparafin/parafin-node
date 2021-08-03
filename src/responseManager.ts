@@ -3,8 +3,10 @@ import {
   BusinessResponse,
   CashAdvanceResponse,
   OfferCollectionResponse,
+  OptInResponse,
   ParafinResponse,
-  PartnerResponse
+  PartnerResponse,
+  PostResponse
 } from './types'
 
 function baseResponse(response: AxiosResponse) {
@@ -132,14 +134,53 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   return response
 }
 
+function optInResponse(optIn: AxiosResponse): OptInResponse {
+  const results = baseResponse(optIn)
+  const response: OptInResponse = {
+    empty: true,
+    opted: null
+  }
+
+  if (results != null) {
+    if (results.length > 0) {
+      response.empty = false
+      response.opted = true
+    } else {
+      response.empty = false
+      response.opted = false
+    }
+  }
+
+  return response
+}
+
+function postResponse(postResponse: AxiosResponse): PostResponse {
+  const response: PostResponse = {
+    status: 0,
+    statusText: '',
+    data: ''
+  }
+
+  if (postResponse == null || postResponse == undefined) {
+    return response
+  }
+
+  response.status = postResponse.status
+  response.statusText = postResponse.statusText
+  response.data = postResponse.data
+
+  return response
+}
+
 function createParafinResponse(
   partner: PartnerResponse,
   business: BusinessResponse,
   offerCollection: OfferCollectionResponse,
-  cashAdvance: CashAdvanceResponse
+  cashAdvance: CashAdvanceResponse,
+  optIn: OptInResponse
 ): ParafinResponse {
   const response: ParafinResponse = {
-    opted: true,
+    opted: optIn.opted,
     businessExternalId: business.businessExternalId,
     partnerName: partner.partnerName,
     partnerSlug: partner.partnerSlug,
@@ -160,5 +201,7 @@ export {
   businessResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
+  optInResponse,
+  postResponse,
   createParafinResponse
 }

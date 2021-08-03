@@ -23,12 +23,40 @@ export interface CashAdvanceResponse extends BasicResponse {
   verified: boolean | null
 }
 
+export interface OptInResponse extends BasicResponse {
+  opted: boolean | null
+}
+
 export interface ParafinResponse
   extends PartnerResponse,
     BusinessResponse,
     OfferCollectionResponse,
-    CashAdvanceResponse {
-  opted: boolean
+    CashAdvanceResponse,
+    OptInResponse {}
+
+export interface BasicRequest {}
+
+export interface OptInRequest extends BasicRequest {
+  businessExternalId: string
+  businessName: string
+  ownerFirstName: string
+  ownerLastName: string
+  accountManagers: OptInAccountManager[]
+  routingNumber: string
+  accountNumberLastFour: string
+  email: string
+  postalCode: string
+}
+
+export interface OptInAccountManager {
+  name: string
+  email: string
+}
+
+export interface PostResponse {
+  status: number
+  statusText: string
+  data: string
 }
 
 export type ClientConfig = {
