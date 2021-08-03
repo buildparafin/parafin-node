@@ -1,4 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
+import caseConverter from 'axios-case-converter'
+
 import {
   businessResponse,
   cashAdvanceResponse,
@@ -105,11 +107,16 @@ async function post(
   config: ClientConfig,
   data: BasicRequest
 ) {
-  const response = await axios.post(`${config.environment}/${endpoint}`, data, {
-    headers: {
-      authorization: formatToken(config.token)
+  const client = caseConverter(axios.create())
+  const response = await client.post(
+    `${config.environment}/${endpoint}`,
+    data,
+    {
+      headers: {
+        authorization: formatToken(config.token)
+      }
     }
-  })
+  )
 
   return response
 }
