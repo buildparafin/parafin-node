@@ -41,14 +41,14 @@ export interface OptInRequest extends BasicRequest {
   businessName: string
   ownerFirstName: string
   ownerLastName: string
-  accountManagers: OptInAccountManager[]
+  accountManagers: AccountManager[]
   routingNumber: string
   accountNumberLastFour: string
   email: string
   postalCode: string
 }
 
-export interface OptInAccountManager {
+export interface AccountManager {
   name: string
   email: string
 }
