@@ -22,11 +22,7 @@ function baseResponse(response: AxiosResponse) {
   const data = response.data
   const results = data.results
 
-  if (!Array.isArray(results) || !results.length) {
-    return null
-  } else {
-    return results
-  }
+  return results
 }
 
 function partnerResponse(partner: AxiosResponse): PartnerResponse {
@@ -37,7 +33,7 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
     partnerSlug: null
   }
 
-  if (results != null) {
+  if (results != null && results.length > 0) {
     response.empty = false
     response.partnerName = results[0].name
     response.partnerSlug = results[0].slug
@@ -53,7 +49,7 @@ function businessResponse(business: AxiosResponse): BusinessResponse {
     businessExternalId: null
   }
 
-  if (results != null) {
+  if (results != null && results.length > 0) {
     response.empty = false
     response.businessExternalId = results[0].external_id
   }
@@ -70,7 +66,7 @@ function offerCollectionResponse(
     approvalAmount: null
   }
 
-  if (results != null) {
+  if (results != null && results.length > 0) {
     const openCollection = results.filter((element) => element.open)
     if (!openCollection.length) {
       return response
@@ -110,7 +106,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     verified: null
   }
 
-  if (results != null) {
+  if (results != null && results.length > 0) {
     const outstandingAdvances = results.filter(
       (element) => element.state === 'outstanding'
     )
@@ -127,8 +123,8 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     response.acceptedAmount = cashAdvance.amount
     response.outstandingAmount = String(outstandingAmount)
     response.paidAmount = cashAdvance.paid_amount
-    ;(response.estimatedPayoffDate = cashAdvance.estimated_repayment_date),
-      (response.verified = cashAdvance.verified)
+    response.estimatedPayoffDate = cashAdvance.estimated_repayment_date
+    response.verified = cashAdvance.verified
   }
 
   return response
@@ -142,11 +138,10 @@ function optInResponse(optIn: AxiosResponse): OptInResponse {
   }
 
   if (results != null) {
+    response.empty = false
     if (results.length > 0) {
-      response.empty = false
       response.opted = true
     } else {
-      response.empty = false
       response.opted = false
     }
   }
