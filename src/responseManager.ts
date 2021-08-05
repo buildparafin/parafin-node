@@ -67,7 +67,7 @@ function offerCollectionResponse(
   }
 
   if (results != null && results.length > 0) {
-    const openCollection = results.filter((element) => element.open)
+    const openCollection = results.filter((element: any) => element.open)
     if (!openCollection.length) {
       return response
     }
@@ -108,7 +108,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
 
   if (results != null && results.length > 0) {
     const outstandingAdvances = results.filter(
-      (element) => element.state === 'outstanding'
+      (element: any) => element.state === 'outstanding'
     )
     if (!outstandingAdvances.length) {
       return response
