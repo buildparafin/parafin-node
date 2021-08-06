@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios'
 import {
-  BusinessResponse,
+  BusinessCoreResponse,
   CashAdvanceResponse,
   OfferCollectionResponse,
   OptInResponse,
@@ -42,16 +42,16 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
   return response
 }
 
-function businessResponse(business: AxiosResponse): BusinessResponse {
-  const results = baseResponse(business)
-  const response: BusinessResponse = {
+function businessCoreResponse(businessCore: AxiosResponse): BusinessCoreResponse {
+  const results = baseResponse(businessCore)
+  const response: BusinessCoreResponse = {
     empty: true,
-    businessExternalId: null
+    externalId: null
   }
 
   if (results != null && results.length > 0) {
     response.empty = false
-    response.businessExternalId = results[0].external_id
+    response.externalId = results[0].external_id
   }
 
   return response
@@ -169,14 +169,14 @@ function postResponse(postResponse: AxiosResponse): PostResponse {
 
 function createParafinResponse(
   partner: PartnerResponse,
-  business: BusinessResponse,
+  businessCore: BusinessCoreResponse,
   offerCollection: OfferCollectionResponse,
   cashAdvance: CashAdvanceResponse,
   optIn: OptInResponse
 ): ParafinResponse {
   const response: ParafinResponse = {
     opted: optIn.opted,
-    businessExternalId: business.businessExternalId,
+    externalId: businessCore.externalId,
     partnerName: partner.partnerName,
     partnerSlug: partner.partnerSlug,
     approvalAmount: offerCollection.approvalAmount,
@@ -193,7 +193,7 @@ function createParafinResponse(
 
 export {
   partnerResponse,
-  businessResponse,
+  businessCoreResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
   optInResponse,

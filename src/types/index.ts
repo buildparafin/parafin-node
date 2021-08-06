@@ -7,8 +7,8 @@ export interface PartnerResponse extends BasicResponse {
   partnerSlug: string | null
 }
 
-export interface BusinessResponse extends BasicResponse {
-  businessExternalId: string | null
+export interface BusinessCoreResponse extends BasicResponse {
+  externalId: string | null
 }
 
 export interface OfferCollectionResponse extends BasicResponse {
@@ -29,7 +29,7 @@ export interface OptInResponse extends BasicResponse {
 
 export interface ParafinResponse
   extends PartnerResponse,
-    BusinessResponse,
+    BusinessCoreResponse,
     OfferCollectionResponse,
     CashAdvanceResponse,
     OptInResponse {}
