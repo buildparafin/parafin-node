@@ -77,19 +77,25 @@ function offerCollectionResponse(
       return response
     }
 
-    const chunks = openOffers[0].chunks
-    if (!chunks.length) {
-      return response
-    }
+    const maxOfferAmount = Math.max.apply(
+      Math,
+      openOffers.map(
+        function(openOffer: any) {
+          const chunksLength = openOffer.chunks.length
+          if (chunksLength === 0 || openOffer.chunks[chunksLength - 1].amount_range.length < 2) {
+            return 0
+          }
+          return Number(openOffer.chunks[openOffer.chunks.length - 1].amount_range[1])
+        }
+      )
+    )
 
-    // The chunks are already sorted
-    const maxAmountRange = chunks[chunks.length - 1].amount_range
-    if (!maxAmountRange.length) {
+    if (maxOfferAmount === 0) {
       return response
     }
 
     response.empty = false
-    response.approvalAmount = maxAmountRange[1]
+    response.approvalAmount = String(maxOfferAmount)
   }
 
   return response
