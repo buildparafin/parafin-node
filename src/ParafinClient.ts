@@ -1,6 +1,6 @@
 import { post, get, getCombine } from './request'
 import {
-  businessResponse,
+  businessCoreResponse,
   cashAdvanceResponse,
   offerCollectionResponse,
   optInResponse,
@@ -41,7 +41,7 @@ class Client {
     const data = await getCombine(
       this.config,
       'partners',
-      'businesses',
+      'businesses/core',
       'cash_advance_offer_collections_v2',
       'cash_advances',
       'opt_ins'
@@ -54,9 +54,9 @@ class Client {
     return partner
   }
 
-  async businesses() {
-    const businesses = businessResponse(await get('businesses', this.config))
-    return businesses
+  async businessCores() {
+    const businessCores = businessCoreResponse(await get('businesses/core', this.config))
+    return businessCores
   }
 
   async offerCollection() {

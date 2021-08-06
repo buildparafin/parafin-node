@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 import caseConverter from 'axios-case-converter'
 
 import {
-  businessResponse,
+  businessCoreResponse,
   cashAdvanceResponse,
   createParafinResponse,
   offerCollectionResponse,
@@ -65,20 +65,20 @@ async function getCombine(
     axios.spread(
       (
         partner: AxiosResponse,
-        businesses: AxiosResponse,
+        businessCores: AxiosResponse,
         offerCollection: AxiosResponse,
         cashAdvance: AxiosResponse,
         optIn: AxiosResponse
       ) => {
         const partnerTemp = partnerResponse(partner)
-        const businessTemp = businessResponse(businesses)
+        const businessCoreTemp = businessCoreResponse(businessCores)
         const offerTemp = offerCollectionResponse(offerCollection)
         const advanceTemp = cashAdvanceResponse(cashAdvance)
         const optInTemp = optInResponse(optIn)
 
         const parafinResponse = createParafinResponse(
           partnerTemp,
-          businessTemp,
+          businessCoreTemp,
           offerTemp,
           advanceTemp,
           optInTemp
