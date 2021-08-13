@@ -7,7 +7,7 @@ import {
   partnerResponse,
   postResponse
 } from './responseManager'
-import { ClientConfig, environment, OptInRequest } from './types'
+import { ClientConfig, environment, OptInRequest, OptOutRequest } from './types'
 
 class Client {
   config: ClientConfig
@@ -55,7 +55,9 @@ class Client {
   }
 
   async businessCores() {
-    const businessCores = businessCoreResponse(await get('businesses/core', this.config))
+    const businessCores = businessCoreResponse(
+      await get('businesses/core', this.config)
+    )
     return businessCores
   }
 
@@ -81,6 +83,11 @@ class Client {
   async postOptIn(data: OptInRequest) {
     const optIn = postResponse(await post('opt_ins', this.config, data))
     return optIn
+  }
+
+  async postOptOut(data: OptOutRequest) {
+    const optOut = postResponse(await post('opt_out', this.config, data))
+    return optOut
   }
 }
 
