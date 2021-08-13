@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import axiosRetry from 'axios-retry';
 import caseConverter from 'axios-case-converter'
 
 import {
@@ -10,6 +11,12 @@ import {
   optInResponse
 } from './responseManager'
 import { BasicRequest, ClientConfig, ParafinResponse } from './types'
+
+
+axiosRetry(
+  axios,
+  { retries: 2, retryDelay: axiosRetry.exponentialDelay }
+)
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
