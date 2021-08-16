@@ -42,7 +42,9 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
   return response
 }
 
-function businessCoreResponse(businessCore: AxiosResponse): BusinessCoreResponse {
+function businessCoreResponse(
+  businessCore: AxiosResponse
+): BusinessCoreResponse {
   const results = baseResponse(businessCore)
   const response: BusinessCoreResponse = {
     empty: true,
@@ -79,15 +81,18 @@ function offerCollectionResponse(
 
     const maxOfferAmount = Math.max.apply(
       Math,
-      openOffers.map(
-        function(openOffer: any) {
-          const chunksLength = openOffer.chunks.length
-          if (chunksLength === 0 || openOffer.chunks[chunksLength - 1].amount_range.length < 2) {
-            return 0
-          }
-          return Number(openOffer.chunks[openOffer.chunks.length - 1].amount_range[1])
+      openOffers.map(function (openOffer: any) {
+        const chunksLength = openOffer.chunks.length
+        if (
+          chunksLength === 0 ||
+          openOffer.chunks[chunksLength - 1].amount_range.length < 2
+        ) {
+          return 0
         }
-      )
+        return Number(
+          openOffer.chunks[openOffer.chunks.length - 1].amount_range[1]
+        )
+      })
     )
 
     if (maxOfferAmount === 0) {

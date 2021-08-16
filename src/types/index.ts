@@ -48,6 +48,10 @@ export interface OptInRequest extends BasicRequest {
   postalCode: string
 }
 
+export interface OptOutRequest extends BasicRequest {
+  businessExternalId: string
+}
+
 export interface AccountManager {
   name: string
   email: string
