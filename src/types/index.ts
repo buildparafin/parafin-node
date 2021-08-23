@@ -1,6 +1,4 @@
-export interface BasicResponse {
-  empty: boolean
-}
+export interface BasicResponse {}
 
 export interface PartnerResponse extends BasicResponse {
   partnerName: string | null
@@ -21,6 +19,7 @@ export interface CashAdvanceResponse extends BasicResponse {
   paidAmount: string | null
   estimatedPayoffDate: string | null
   verified: boolean | null
+  totalAdvances: number | null
 }
 
 export interface OptInResponse extends BasicResponse {

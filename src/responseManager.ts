@@ -28,13 +28,11 @@ function baseResponse(response: AxiosResponse) {
 function partnerResponse(partner: AxiosResponse): PartnerResponse {
   const results = baseResponse(partner)
   const response: PartnerResponse = {
-    empty: true,
     partnerName: null,
     partnerSlug: null
   }
 
   if (results != null && results.length > 0) {
-    response.empty = false
     response.partnerName = results[0].name
     response.partnerSlug = results[0].slug
   }
@@ -47,12 +45,10 @@ function businessCoreResponse(
 ): BusinessCoreResponse {
   const results = baseResponse(businessCore)
   const response: BusinessCoreResponse = {
-    empty: true,
     externalId: null
   }
 
   if (results != null && results.length > 0) {
-    response.empty = false
     response.externalId = results[0].external_id
   }
 
@@ -64,7 +60,6 @@ function offerCollectionResponse(
 ): OfferCollectionResponse {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
-    empty: true,
     approvalAmount: null
   }
 
@@ -99,7 +94,6 @@ function offerCollectionResponse(
       return response
     }
 
-    response.empty = false
     response.approvalAmount = String(maxOfferAmount)
   }
 
@@ -109,15 +103,16 @@ function offerCollectionResponse(
 function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   const results = baseResponse(cashAdvance)
   const response: CashAdvanceResponse = {
-    empty: true,
     acceptedAmount: null,
     outstandingAmount: null,
     paidAmount: null,
     estimatedPayoffDate: null,
-    verified: null
+    verified: null,
+    totalAdvances: null
   }
 
   if (results != null && results.length > 0) {
+    // The API returns only Non Void States of cash advances
     const outstandingAdvances = results.filter(
       (element: any) => element.state === 'outstanding'
     )
@@ -130,12 +125,12 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     const paidAmount: number = +cashAdvance.paid_amount
     const outstandingAmount = totalAmount - paidAmount
 
-    response.empty = false
     response.acceptedAmount = cashAdvance.amount
     response.outstandingAmount = String(outstandingAmount)
     response.paidAmount = cashAdvance.paid_amount
     response.estimatedPayoffDate = cashAdvance.estimated_repayment_date
     response.verified = cashAdvance.verified
+    response.totalAdvances = results.length
   }
 
   return response
@@ -144,12 +139,10 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
 function optInResponse(optIn: AxiosResponse): OptInResponse {
   const results = baseResponse(optIn)
   const response: OptInResponse = {
-    empty: true,
     opted: null
   }
 
   if (results != null) {
-    response.empty = false
     if (results.length > 0) {
       response.opted = true
     } else {
@@ -196,7 +189,7 @@ function createParafinResponse(
     paidAmount: cashAdvance.paidAmount,
     estimatedPayoffDate: cashAdvance.estimatedPayoffDate,
     verified: cashAdvance.verified,
-    empty: partner.empty && offerCollection.empty && cashAdvance.empty
+    totalAdvances: cashAdvance.totalAdvances
   }
 
   return response
