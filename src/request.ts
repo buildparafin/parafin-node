@@ -9,41 +9,28 @@ import {
   partnerResponse,
   optInResponse
 } from './responseManager'
-import { BasicRequest, ClientConfig, ParafinResponse } from './types'
+import {
+  BasicRequest,
+  ClientConfig,
+  ParafinError,
+  ParafinResponse
+} from './types'
 
-// TODO: Add later handling of the response
-// function rejectWithParafinError(res: any) {
-//   if (type(res.data) === 'Object') {
-//     res.data.status_code = res.status;
-//     return new ParafinError(res.data)
-//   }
-
-//   // Unknown body type returned, return a standard API_ERROR
-//   return new ParafinError({
-//       error_type: 'API_ERROR',
-//       status_code: res.status,
-//       error_code: 'INTERNAL_SERVER_ERROR',
-//       error_message: String(res.data),
-//     })
-// }
-
-// function handleApiResponse(resolve: any, reject: unknown, res: AxiosResponse): any {
-//   const body = res.data;
-
-//   console.log(body)
-
-//   if (res != null && type(body) === "Object") {
-//     body.status_code = res.status;
-//   }
-
-//   if (res.status === 200) {
-//     return body
-//   } else if (res.status === 210) {
-//     return body
-//   } else {
-//     return rejectWithParafinError(res);
-//   }
-// }
+function throwParafinError(error: any) {
+  if (error.response) {
+    throw new ParafinError({
+      error_type: 'API_ERROR',
+      status_code: error.response.status,
+      status_text: String(error.response.statusText),
+      error_message: String(error.response.data)
+    })
+  } else if (error.request) {
+    throw new ParafinError({
+      error_type: 'API_ERROR',
+      error_message: 'The request was made but no response was received'
+    })
+  }
+}
 
 function formatToken(token: string) {
   return `Bearer ${token}`
@@ -61,43 +48,63 @@ async function getCombine(
     })
   )
 
-  const result = axios.all(requests).then(
-    axios.spread(
-      (
-        partner: AxiosResponse,
-        businessCores: AxiosResponse,
-        offerCollection: AxiosResponse,
-        cashAdvance: AxiosResponse,
-        optIn: AxiosResponse
-      ) => {
-        const partnerTemp = partnerResponse(partner)
-        const businessCoreTemp = businessCoreResponse(businessCores)
-        const offerTemp = offerCollectionResponse(offerCollection)
-        const advanceTemp = cashAdvanceResponse(cashAdvance)
-        const optInTemp = optInResponse(optIn)
+  const result = axios
+    .all(requests)
+    .then(
+      axios.spread(
+        (
+          partner: AxiosResponse,
+          businessCores: AxiosResponse,
+          offerCollection: AxiosResponse,
+          cashAdvance: AxiosResponse,
+          optIn: AxiosResponse
+        ) => {
+          const partnerTemp = partnerResponse(partner)
+          const businessCoreTemp = businessCoreResponse(businessCores)
+          const offerTemp = offerCollectionResponse(offerCollection)
+          const advanceTemp = cashAdvanceResponse(cashAdvance)
+          const optInTemp = optInResponse(optIn)
 
-        const parafinResponse = createParafinResponse(
-          partnerTemp,
-          businessCoreTemp,
-          offerTemp,
-          advanceTemp,
-          optInTemp
-        )
+          const parafinResponse = createParafinResponse(
+            partnerTemp,
+            businessCoreTemp,
+            offerTemp,
+            advanceTemp,
+            optInTemp
+          )
 
-        return parafinResponse
-      }
+          return parafinResponse
+        }
+      )
     )
-  )
+    .catch(function (error) {
+      if (error.response || error.request) {
+        throwParafinError(error)
+      }
+
+      throw new Error(error.message)
+    })
 
   return result
 }
 
-async function get(endpoint: string, config: ClientConfig) {
-  const response = await axios.get(`${config.environment}/${endpoint}`, {
-    headers: {
-      authorization: formatToken(config.token)
-    }
-  })
+async function get(
+  endpoint: string,
+  config: ClientConfig
+): Promise<AxiosResponse<any>> {
+  const response = await axios
+    .get(`${config.environment}/${endpoint}`, {
+      headers: {
+        authorization: formatToken(config.token)
+      }
+    })
+    .catch(function (error) {
+      if (error.response || error.request) {
+        throwParafinError(error)
+      }
+
+      throw new Error(error.message)
+    })
 
   return response
 }
@@ -106,17 +113,21 @@ async function post(
   endpoint: string,
   config: ClientConfig,
   data: BasicRequest
-) {
+): Promise<AxiosResponse<any>> {
   const client = caseConverter(axios.create())
-  const response = await client.post(
-    `${config.environment}/${endpoint}`,
-    data,
-    {
+  const response = await client
+    .post(`${config.environment}/${endpoint}`, data, {
       headers: {
         authorization: formatToken(config.token)
       }
-    }
-  )
+    })
+    .catch(function (error) {
+      if (error.response || error.request) {
+        throwParafinError(error)
+      }
+
+      throw new Error(error.message)
+    })
 
   return response
 }
