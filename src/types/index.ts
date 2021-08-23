@@ -63,14 +63,14 @@ export interface PostResponse {
   data: string
 }
 
-export type ClientConfig = {
+export interface ClientConfig {
   token: string
   environment: string
 }
 
 export class ParafinError extends Error {
   constructor(body: ParafinErrorType) {
-    super(body.error_code)
+    super(body.status_text)
     this.name = 'ParafinError'
 
     if (typeof body === 'object') {
@@ -79,13 +79,12 @@ export class ParafinError extends Error {
   }
 }
 
-export type ParafinErrorType = {
+export interface ParafinErrorType {
   error_type: string
-  status_code: string
-  error_code: string
+  status_code?: number
+  status_text?: string
   error_message?: string
   display_message?: string
-  request_id?: string
 }
 
 export const environment = {
