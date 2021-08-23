@@ -12,7 +12,7 @@ import {
 } from './responseManager'
 import { BasicRequest, ClientConfig, ParafinResponse } from './types'
 
-axiosRetry(axios, { retries: 2, retryDelay: axiosRetry.exponentialDelay })
+// axiosRetry(axios, { retries: 2, retryDelay: axiosRetry.exponentialDelay })
 
 // TODO: Add later handling of the response
 // function rejectWithParafinError(res: any) {
