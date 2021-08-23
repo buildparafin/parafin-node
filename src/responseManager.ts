@@ -112,6 +112,8 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   }
 
   if (results != null && results.length > 0) {
+    response.totalAdvances = results.length
+
     // The API returns only Non Void States of cash advances
     const outstandingAdvances = results.filter(
       (element: any) => element.state === 'outstanding'
@@ -130,7 +132,6 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     response.paidAmount = cashAdvance.paid_amount
     response.estimatedPayoffDate = cashAdvance.estimated_repayment_date
     response.verified = cashAdvance.verified
-    response.totalAdvances = results.length
   }
 
   return response
