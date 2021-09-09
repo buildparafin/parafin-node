@@ -74,17 +74,46 @@ export class ParafinError extends Error {
 
     if (typeof body === 'object') {
       Object.assign(this, body)
+
+      if (body.status_code != undefined) {
+        const statusCodeString = body.status_code
+        const message = statusCodeToDisplayMessage.get(statusCodeString)
+
+        if (message != undefined) {
+          body.display_message = message
+        } else {
+          body.display_message = defaultDisplayMessage
+        }
+      }
     }
   }
 }
 
 export interface ParafinErrorType {
   error_type: string
+  error_message: string
   status_code?: number
   status_text?: string
-  error_message?: string
   display_message?: string
 }
+
+const defaultDisplayMessage =
+  'Something has gone wrong in our end! We are looking into it.'
+const statusCodeToDisplayMessage = new Map<number, string>([
+  [200, 'Success!'],
+  [201, 'Success!'],
+  [202, 'Success!'],
+  [400, 'You did not provide the right data.'],
+  [401, 'You are not authorized for this functionality.'],
+  [403, 'You are not authorized for this functionality.'],
+  [404, 'Oops! this is most likely our fault, we are looking into it.'],
+  [408, 'It seems like there is a network issue. Give it another try!'],
+  [500, 'Our server is down, we are looking into it.'],
+  [501, 'Our server is down, we are looking into it.'],
+  [502, 'Our server is down, we are looking into it.'],
+  [503, 'Our server is down, we are looking into it.'],
+  [504, 'Our server is down, we are looking into it.']
+])
 
 export const environment = {
   production: 'https://api.parafin.com',

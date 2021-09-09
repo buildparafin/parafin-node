@@ -114,7 +114,7 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   if (results != null && results.length > 0) {
     response.totalAdvances = results.length
 
-    // The API returns only Non Void States of cash advances
+    // The API returns only non-void states of cash advances
     const outstandingAdvances = results.filter(
       (element: any) => element.state === 'outstanding'
     )
