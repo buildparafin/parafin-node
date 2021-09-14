@@ -32,10 +32,10 @@ Once an instance of the client has been created you can use the following method
 parafinClient.data()
 
 // Receive partner information
-parafinClient.partners()
+parafinClient.partner()
 
 // Receive business information
-parafinClient.businesses()
+parafinClient.businessCore()
 
 // Receive offer collection information
 parafinClient.offerCollection()
@@ -46,6 +46,7 @@ parafinClient.cashAdvance()
 // Receive optIn information
 parafinClient.optIn()
 
+// OptInRequest object for posting an opt in
 const accountManager: parafin.AccountManager {
   name: 'John Doe',
   email: 'jdoe@mygym.com'
@@ -66,7 +67,15 @@ const data: parafin.OptInRequest = {
 }
 
 // Post optIn information
-parafinClient.postOptIn(data)
+parafinClient.postOptIn(data: OptInRequest)
+
+// OptOutRequest object for posting an opt out
+const data: parafin.OptOutRequest = {
+  businessExternalId: string
+}
+
+// Post optOut information
+parafinClient postOptOut(data: OptOutRequest)
 ```
 
 ## Install
