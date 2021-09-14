@@ -78,13 +78,13 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async partners(): Promise<Ok<PartnerResponse, ParafinError>> {
+  async partner(): Promise<Ok<PartnerResponse, ParafinError>> {
     return get('partners', this.config)
       .andThen(partnerResponse)
       .then(returnOrThrow)
   }
 
-  async businessCores(): Promise<Ok<BusinessCoreResponse, ParafinError>> {
+  async businessCore(): Promise<Ok<BusinessCoreResponse, ParafinError>> {
     return get('businesses/core', this.config)
       .andThen(businessCoreResponse)
       .then(returnOrThrow)
