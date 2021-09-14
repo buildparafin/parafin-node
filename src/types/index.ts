@@ -85,7 +85,7 @@ export class ParafinError implements Error, ParafinErrorType {
         const message = statusCodeToDisplayMessage.get(statusCodeString)
 
         if (message != undefined) {
-          body.display_message = message
+          this.display_message = message
         }
       }
     }
