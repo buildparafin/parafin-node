@@ -45,11 +45,13 @@ function partnerResponse(
 ): ResultAsync<PartnerResponse, ParafinError> {
   const results = baseResponse(partner)
   const response: PartnerResponse = {
+    partnerId: null,
     partnerName: null,
     partnerSlug: null
   }
 
   if (results != null && results.length > 0) {
+    response.partnerId = results[0].id
     response.partnerName = results[0].name
     response.partnerSlug = results[0].slug
   }
@@ -62,10 +64,12 @@ function businessCoreResponse(
 ): ResultAsync<BusinessCoreResponse, ParafinError> {
   const results = baseResponse(businessCore)
   const response: BusinessCoreResponse = {
+    businessId: null,
     externalId: null
   }
 
   if (results != null && results.length > 0) {
+    response.businessId = results[0].id
     response.externalId = results[0].external_id
   }
 
@@ -206,7 +210,9 @@ function parafinResponse(
 ): ResultAsync<ParafinResponse, ParafinError> {
   const response: ParafinResponse = {
     opted: null,
+    businessId: null,
     externalId: null,
+    partnerId: null,
     partnerName: null,
     partnerSlug: null,
     approvalAmount: null,
@@ -220,6 +226,7 @@ function parafinResponse(
 
   mergedResultAsync[0].then((res) => {
     if (res.isOk()) {
+      response.partnerId = res.value.partnerId
       response.partnerName = res.value.partnerName
       response.partnerSlug = res.value.partnerSlug
     }
@@ -227,6 +234,7 @@ function parafinResponse(
 
   mergedResultAsync[1].then((res) => {
     if (res.isOk()) {
+      response.businessId = res.value.businessId
       response.externalId = res.value.externalId
     }
   })

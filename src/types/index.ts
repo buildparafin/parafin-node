@@ -1,11 +1,13 @@
 export interface BasicResponse {}
 
 export interface PartnerResponse extends BasicResponse {
+  partnerId: string | null
   partnerName: string | null
   partnerSlug: string | null
 }
 
 export interface BusinessCoreResponse extends BasicResponse {
+  businessId: string | null
   externalId: string | null
 }
 
