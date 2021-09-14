@@ -1,61 +1,44 @@
 import axios, { AxiosResponse } from 'axios'
-import axiosRetry from 'axios-retry'
 import caseConverter from 'axios-case-converter'
 
 import {
   businessCoreResponse,
   cashAdvanceResponse,
-  createParafinResponse,
   offerCollectionResponse,
   partnerResponse,
   optInResponse
 } from './responseManager'
-import { BasicRequest, ClientConfig, ParafinResponse } from './types'
 
-// axiosRetry(axios, { retries: 2, retryDelay: axiosRetry.exponentialDelay })
-
-// TODO: Add later handling of the response
-// function rejectWithParafinError(res: any) {
-//   if (type(res.data) === 'Object') {
-//     res.data.status_code = res.status;
-//     return new ParafinError(res.data)
-//   }
-
-//   // Unknown body type returned, return a standard API_ERROR
-//   return new ParafinError({
-//       error_type: 'API_ERROR',
-//       status_code: res.status,
-//       error_code: 'INTERNAL_SERVER_ERROR',
-//       error_message: String(res.data),
-//     })
-// }
-
-// function handleApiResponse(resolve: any, reject: unknown, res: AxiosResponse): any {
-//   const body = res.data;
-
-//   console.log(body)
-
-//   if (res != null && type(body) === "Object") {
-//     body.status_code = res.status;
-//   }
-
-//   if (res.status === 200) {
-//     return body
-//   } else if (res.status === 210) {
-//     return body
-//   } else {
-//     return rejectWithParafinError(res);
-//   }
-// }
+import {
+  BasicRequest,
+  BusinessCoreResponse,
+  CashAdvanceResponse,
+  ClientConfig,
+  handleParafinError,
+  OfferCollectionResponse,
+  OptInResponse,
+  ParafinError,
+  PartnerResponse,
+  ResultAsync
+} from './types'
 
 function formatToken(token: string) {
   return `Bearer ${token}`
 }
 
-async function getCombine(
+function combine(
   config: ClientConfig,
   ...endpoints: string[]
-): Promise<ParafinResponse> {
+): ResultAsync<
+  [
+    ResultAsync<PartnerResponse, ParafinError>,
+    ResultAsync<BusinessCoreResponse, ParafinError>,
+    ResultAsync<OfferCollectionResponse, ParafinError>,
+    ResultAsync<CashAdvanceResponse, ParafinError>,
+    ResultAsync<OptInResponse, ParafinError>
+  ],
+  ParafinError
+> {
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
       headers: {
@@ -64,7 +47,7 @@ async function getCombine(
     })
   )
 
-  const result = axios.all(requests).then(
+  const promiseMerge = axios.all(requests).then(
     axios.spread(
       (
         partner: AxiosResponse,
@@ -73,55 +56,54 @@ async function getCombine(
         cashAdvance: AxiosResponse,
         optIn: AxiosResponse
       ) => {
-        const partnerTemp = partnerResponse(partner)
-        const businessCoreTemp = businessCoreResponse(businessCores)
-        const offerTemp = offerCollectionResponse(offerCollection)
-        const advanceTemp = cashAdvanceResponse(cashAdvance)
-        const optInTemp = optInResponse(optIn)
+        const merge: [
+          ResultAsync<PartnerResponse, ParafinError>,
+          ResultAsync<BusinessCoreResponse, ParafinError>,
+          ResultAsync<OfferCollectionResponse, ParafinError>,
+          ResultAsync<CashAdvanceResponse, ParafinError>,
+          ResultAsync<OptInResponse, ParafinError>
+        ] = [
+          partnerResponse(partner),
+          businessCoreResponse(businessCores),
+          offerCollectionResponse(offerCollection),
+          cashAdvanceResponse(cashAdvance),
+          optInResponse(optIn)
+        ]
 
-        const parafinResponse = createParafinResponse(
-          partnerTemp,
-          businessCoreTemp,
-          offerTemp,
-          advanceTemp,
-          optInTemp
-        )
-
-        return parafinResponse
+        return merge
       }
     )
   )
 
-  return result
+  return ResultAsync.fromPromise(promiseMerge, handleParafinError)
 }
 
-async function get(endpoint: string, config: ClientConfig) {
-  const response = await axios.get(`${config.environment}/${endpoint}`, {
+function get(
+  endpoint: string,
+  config: ClientConfig
+): ResultAsync<AxiosResponse<any>, ParafinError> {
+  const request = axios.get(`${config.environment}/${endpoint}`, {
     headers: {
       authorization: formatToken(config.token)
     }
   })
 
-  return response
+  return ResultAsync.fromPromise(request, handleParafinError)
 }
 
-async function post(
+function post(
   endpoint: string,
   config: ClientConfig,
   data: BasicRequest
-) {
+): ResultAsync<AxiosResponse<any>, ParafinError> {
   const client = caseConverter(axios.create())
-  const response = await client.post(
-    `${config.environment}/${endpoint}`,
-    data,
-    {
-      headers: {
-        authorization: formatToken(config.token)
-      }
+  const request = client.post(`${config.environment}/${endpoint}`, data, {
+    headers: {
+      authorization: formatToken(config.token)
     }
-  )
+  })
 
-  return response
+  return ResultAsync.fromPromise(request, handleParafinError)
 }
 
-export { get, post, getCombine }
+export { get, post, combine }

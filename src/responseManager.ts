@@ -2,12 +2,27 @@ import { AxiosResponse } from 'axios'
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,
+  defaultDisplayMessage,
   OfferCollectionResponse,
   OptInResponse,
+  ParafinError,
   ParafinResponse,
   PartnerResponse,
-  PostResponse
+  PostResponse,
+  ResultAsync
 } from './types'
+
+const promisify = <T>(value: T): Promise<T> =>
+  new Promise((resolve, _reject) => {
+    resolve(value)
+  })
+
+const handleParafinError = (error: any): ParafinError =>
+  new ParafinError({
+    error_type: 'RESPONSE_MANAGER_ERROR',
+    error_message: 'Unable to process a response',
+    display_message: defaultDisplayMessage
+  })
 
 function baseResponse(response: AxiosResponse) {
   if (
@@ -25,7 +40,9 @@ function baseResponse(response: AxiosResponse) {
   return results
 }
 
-function partnerResponse(partner: AxiosResponse): PartnerResponse {
+function partnerResponse(
+  partner: AxiosResponse
+): ResultAsync<PartnerResponse, ParafinError> {
   const results = baseResponse(partner)
   const response: PartnerResponse = {
     partnerName: null,
@@ -37,12 +54,12 @@ function partnerResponse(partner: AxiosResponse): PartnerResponse {
     response.partnerSlug = results[0].slug
   }
 
-  return response
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
 function businessCoreResponse(
   businessCore: AxiosResponse
-): BusinessCoreResponse {
+): ResultAsync<BusinessCoreResponse, ParafinError> {
   const results = baseResponse(businessCore)
   const response: BusinessCoreResponse = {
     externalId: null
@@ -52,12 +69,12 @@ function businessCoreResponse(
     response.externalId = results[0].external_id
   }
 
-  return response
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
 function offerCollectionResponse(
   offerCollection: AxiosResponse
-): OfferCollectionResponse {
+): ResultAsync<OfferCollectionResponse, ParafinError> {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
     approvalAmount: null
@@ -66,12 +83,12 @@ function offerCollectionResponse(
   if (results != null && results.length > 0) {
     const openCollection = results.filter((element: any) => element.open)
     if (!openCollection.length) {
-      return response
+      return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
     const openOffers = openCollection[0].offers
     if (!openOffers.length) {
-      return response
+      return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
     const maxOfferAmount = Math.max.apply(
@@ -91,16 +108,18 @@ function offerCollectionResponse(
     )
 
     if (maxOfferAmount === 0) {
-      return response
+      return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
     response.approvalAmount = String(maxOfferAmount)
   }
 
-  return response
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
+function cashAdvanceResponse(
+  cashAdvance: AxiosResponse
+): ResultAsync<CashAdvanceResponse, ParafinError> {
   const results = baseResponse(cashAdvance)
   const response: CashAdvanceResponse = {
     acceptedAmount: null,
@@ -114,12 +133,12 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
   if (results != null && results.length > 0) {
     response.totalAdvances = results.length
 
-    // The API returns only Non Void States of cash advances
+    // The API returns only non-void states of cash advances
     const outstandingAdvances = results.filter(
       (element: any) => element.state === 'outstanding'
     )
     if (!outstandingAdvances.length) {
-      return response
+      return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
     const cashAdvance = outstandingAdvances[0]
@@ -134,10 +153,12 @@ function cashAdvanceResponse(cashAdvance: AxiosResponse): CashAdvanceResponse {
     response.verified = cashAdvance.verified
   }
 
-  return response
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function optInResponse(optIn: AxiosResponse): OptInResponse {
+function optInResponse(
+  optIn: AxiosResponse
+): ResultAsync<OptInResponse, ParafinError> {
   const results = baseResponse(optIn)
   const response: OptInResponse = {
     opted: null
@@ -151,10 +172,12 @@ function optInResponse(optIn: AxiosResponse): OptInResponse {
     }
   }
 
-  return response
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function postResponse(postResponse: AxiosResponse): PostResponse {
+function postResponse(
+  postResponse: AxiosResponse
+): ResultAsync<PostResponse, ParafinError> {
   const response: PostResponse = {
     status: 0,
     statusText: '',
@@ -162,38 +185,76 @@ function postResponse(postResponse: AxiosResponse): PostResponse {
   }
 
   if (postResponse == null || postResponse == undefined) {
-    return response
+    return ResultAsync.fromPromise(promisify(response), handleParafinError)
   }
 
   response.status = postResponse.status
   response.statusText = postResponse.statusText
   response.data = postResponse.data
 
-  return response
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function createParafinResponse(
-  partner: PartnerResponse,
-  businessCore: BusinessCoreResponse,
-  offerCollection: OfferCollectionResponse,
-  cashAdvance: CashAdvanceResponse,
-  optIn: OptInResponse
-): ParafinResponse {
+function parafinResponse(
+  mergedResultAsync: [
+    ResultAsync<PartnerResponse, ParafinError>,
+    ResultAsync<BusinessCoreResponse, ParafinError>,
+    ResultAsync<OfferCollectionResponse, ParafinError>,
+    ResultAsync<CashAdvanceResponse, ParafinError>,
+    ResultAsync<OptInResponse, ParafinError>
+  ]
+): ResultAsync<ParafinResponse, ParafinError> {
   const response: ParafinResponse = {
-    opted: optIn.opted,
-    externalId: businessCore.externalId,
-    partnerName: partner.partnerName,
-    partnerSlug: partner.partnerSlug,
-    approvalAmount: offerCollection.approvalAmount,
-    acceptedAmount: cashAdvance.acceptedAmount,
-    outstandingAmount: cashAdvance.outstandingAmount,
-    paidAmount: cashAdvance.paidAmount,
-    estimatedPayoffDate: cashAdvance.estimatedPayoffDate,
-    verified: cashAdvance.verified,
-    totalAdvances: cashAdvance.totalAdvances
+    opted: null,
+    externalId: null,
+    partnerName: null,
+    partnerSlug: null,
+    approvalAmount: null,
+    acceptedAmount: null,
+    outstandingAmount: null,
+    paidAmount: null,
+    estimatedPayoffDate: null,
+    verified: null,
+    totalAdvances: null
   }
 
-  return response
+  mergedResultAsync[0].then((res) => {
+    if (res.isOk()) {
+      response.partnerName = res.value.partnerName
+      response.partnerSlug = res.value.partnerSlug
+    }
+  })
+
+  mergedResultAsync[1].then((res) => {
+    if (res.isOk()) {
+      response.externalId = res.value.externalId
+    }
+  })
+
+  mergedResultAsync[2].then((res) => {
+    if (res.isOk()) {
+      response.approvalAmount = res.value.approvalAmount
+    }
+  })
+
+  mergedResultAsync[3].then((res) => {
+    if (res.isOk()) {
+      response.acceptedAmount = res.value.acceptedAmount
+      response.outstandingAmount = res.value.outstandingAmount
+      response.paidAmount = res.value.paidAmount
+      response.estimatedPayoffDate = res.value.estimatedPayoffDate
+      response.verified = res.value.verified
+      response.totalAdvances = res.value.totalAdvances
+    }
+  })
+
+  mergedResultAsync[4].then((res) => {
+    if (res.isOk()) {
+      response.opted = res.value.opted
+    }
+  })
+
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
 export {
@@ -203,5 +264,5 @@ export {
   cashAdvanceResponse,
   optInResponse,
   postResponse,
-  createParafinResponse
+  parafinResponse
 }
