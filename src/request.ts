@@ -39,6 +39,7 @@ function combine(
   ],
   ParafinError
 > {
+  axios.defaults.withCredentials = false
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
       headers: {
@@ -82,6 +83,7 @@ function get(
   endpoint: string,
   config: ClientConfig
 ): ResultAsync<AxiosResponse<any>, ParafinError> {
+  axios.defaults.withCredentials = false
   const request = axios.get(`${config.environment}/${endpoint}`, {
     headers: {
       authorization: formatToken(config.token)
@@ -96,6 +98,7 @@ function post(
   config: ClientConfig,
   data: BasicRequest
 ): ResultAsync<AxiosResponse<any>, ParafinError> {
+  axios.defaults.withCredentials = false
   const client = caseConverter(axios.create())
   const request = client.post(`${config.environment}/${endpoint}`, data, {
     headers: {
