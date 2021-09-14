@@ -1,13 +1,29 @@
-import { post, get, getCombine } from './request'
+import { post, get, combine } from './request'
 import {
   businessCoreResponse,
   cashAdvanceResponse,
+  parafinResponse,
   offerCollectionResponse,
   optInResponse,
   partnerResponse,
   postResponse
 } from './responseManager'
-import { ClientConfig, environment, OptInRequest, OptOutRequest } from './types'
+import {
+  BusinessCoreResponse,
+  CashAdvanceResponse,
+  ClientConfig,
+  defaultDisplayMessage,
+  environment,
+  OfferCollectionResponse,
+  Ok,
+  OptInRequest,
+  OptInResponse,
+  OptOutRequest,
+  ParafinError,
+  PartnerResponse,
+  PostResponse,
+  returnOrThrow
+} from './types'
 
 class Client {
   config: ClientConfig
@@ -18,27 +34,38 @@ class Client {
 
   validateInput() {
     if (typeof this.config !== 'object' || this.config === null) {
-      throw new Error(
-        'Unexpected parameter type. ' +
+      return new ParafinError({
+        error_type: 'PARAFIN_CLIENT_CONFIG_ERROR',
+        error_message:
+          'Unexpected parameter type. ' +
           'Refer to github.com/buildparafin/parafin-node ' +
-          'for how to create a Parafin client.'
-      )
+          'for how to create a Parafin client.',
+        display_message: defaultDisplayMessage
+      })
     }
 
     if (
       this.config.environment !== environment.development ||
       this.config.environment !== environment.production
     ) {
-      throw new Error('Invalid Parafin environment')
+      return new ParafinError({
+        error_type: 'PARAFIN_CLIENT_CONFIG_ERROR',
+        error_message: 'Invalid Parafin environment',
+        display_message: defaultDisplayMessage
+      })
     }
 
     if (arguments.length > 1) {
-      throw new Error('Too many arguments to constructor')
+      return new ParafinError({
+        error_type: 'PARAFIN_CLIENT_CONFIG_ERROR',
+        error_message: 'Too many arguments provided',
+        display_message: defaultDisplayMessage
+      })
     }
   }
 
   async data() {
-    const data = await getCombine(
+    return combine(
       this.config,
       'partners',
       'businesses/core',
@@ -46,48 +73,52 @@ class Client {
       'cash_advances',
       'opt_ins'
     )
-    return data
+      .andThen(parafinResponse)
+      .then(returnOrThrow)
   }
 
-  async partners() {
-    const partner = partnerResponse(await get('partners', this.config))
-    return partner
+  async partners(): Promise<Ok<PartnerResponse, ParafinError>> {
+    return get('partners', this.config)
+      .andThen(partnerResponse)
+      .then(returnOrThrow)
   }
 
-  async businessCores() {
-    const businessCores = businessCoreResponse(
-      await get('businesses/core', this.config)
-    )
-    return businessCores
+  async businessCores(): Promise<Ok<BusinessCoreResponse, ParafinError>> {
+    return get('businesses/core', this.config)
+      .andThen(businessCoreResponse)
+      .then(returnOrThrow)
   }
 
-  async offerCollection() {
-    const offerCollection = offerCollectionResponse(
-      await get('cash_advance_offer_collections_v2', this.config)
-    )
-    return offerCollection
+  async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinError>> {
+    return get('cash_advance_offer_collections_v2', this.config)
+      .andThen(offerCollectionResponse)
+      .then(returnOrThrow)
   }
 
-  async cashAdvance() {
-    const cashAdvance = cashAdvanceResponse(
-      await get('cash_advances', this.config)
-    )
-    return cashAdvance
+  async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinError>> {
+    return get('cash_advances', this.config)
+      .andThen(cashAdvanceResponse)
+      .then(returnOrThrow)
   }
 
-  async optIn() {
-    const optIn = optInResponse(await get('opt_ins', this.config))
-    return optIn
+  async optIn(): Promise<Ok<OptInResponse, ParafinError>> {
+    return get('opt_ins', this.config)
+      .andThen(optInResponse)
+      .then(returnOrThrow)
   }
 
-  async postOptIn(data: OptInRequest) {
-    const optIn = postResponse(await post('opt_ins', this.config, data))
-    return optIn
+  async postOptIn(data: OptInRequest): Promise<Ok<PostResponse, ParafinError>> {
+    return post('opt_ins', this.config, data)
+      .andThen(postResponse)
+      .then(returnOrThrow)
   }
 
-  async postOptOut(data: OptOutRequest) {
-    const optOut = postResponse(await post('opt_out', this.config, data))
-    return optOut
+  async postOptOut(
+    data: OptOutRequest
+  ): Promise<Ok<PostResponse, ParafinError>> {
+    return post('opt_out', this.config, data)
+      .andThen(postResponse)
+      .then(returnOrThrow)
   }
 }
 
