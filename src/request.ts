@@ -1,11 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
-import axiosRetry from 'axios-retry'
 import caseConverter from 'axios-case-converter'
 
 import {
   businessCoreResponse,
   cashAdvanceResponse,
-  parafinResponse,
   offerCollectionResponse,
   partnerResponse,
   optInResponse
@@ -16,61 +14,16 @@ import {
   BusinessCoreResponse,
   CashAdvanceResponse,
   ClientConfig,
-  defaultDisplayMessage,
-  Err,
-  err,
   handleParafinError,
   OfferCollectionResponse,
-  ok,
-  Ok,
-  OptInRequest,
   OptInResponse,
   ParafinError,
-  ParafinResponse,
   PartnerResponse,
-  Result,
-  ResultAsync,
-  returnOrThrow
+  ResultAsync
 } from './types'
-
-// axiosRetry(axios, { retries: 2, retryDelay: axiosRetry.exponentialDelay })
 
 function formatToken(token: string) {
   return `Bearer ${token}`
-}
-
-function merge(
-  resultAsyncs: [
-    ResultAsync<PartnerResponse, ParafinError>,
-    ResultAsync<BusinessCoreResponse, ParafinError>,
-    ResultAsync<OfferCollectionResponse, ParafinError>,
-    ResultAsync<CashAdvanceResponse, ParafinError>,
-    ResultAsync<OptInResponse, ParafinError>
-  ]
-): (
-  | PartnerResponse
-  | BusinessCoreResponse
-  | OfferCollectionResponse
-  | CashAdvanceResponse
-  | OptInResponse
-)[] {
-  let results: (
-    | PartnerResponse
-    | BusinessCoreResponse
-    | OfferCollectionResponse
-    | CashAdvanceResponse
-    | OptInResponse
-  )[] = []
-
-  resultAsyncs.forEach((element, index) => {
-    element.then((res) => {
-      if (res.isOk()) {
-        results[index] = res.value
-      }
-    })
-  })
-
-  return results
 }
 
 function combine(

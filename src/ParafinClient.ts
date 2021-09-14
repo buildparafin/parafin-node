@@ -20,6 +20,7 @@ import {
   OptInResponse,
   OptOutRequest,
   ParafinError,
+  ParafinResponse,
   PartnerResponse,
   PostResponse,
   returnOrThrow
@@ -64,7 +65,7 @@ class Client {
     }
   }
 
-  async data() {
+  async data(): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
       'partners',
