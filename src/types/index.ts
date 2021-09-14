@@ -125,7 +125,7 @@ const statusCodeToDisplayMessage = new Map<number, string>([
 ])
 
 export function handleParafinError(error: any): ParafinError {
-  if (error.response) {
+  if (error != null && error != undefined && error.response) {
     return new ParafinError({
       error_type: 'API_ERROR_RESPONSE',
       status_code: error.response.status,
@@ -133,7 +133,7 @@ export function handleParafinError(error: any): ParafinError {
       error_message: String(error.response.data),
       display_message: defaultDisplayMessage
     })
-  } else if (error.request) {
+  } else if (error != null && error != undefined && error.request) {
     return new ParafinError({
       error_type: 'API_ERROR_REQUEST',
       error_message: 'The request was made but no response was received',
