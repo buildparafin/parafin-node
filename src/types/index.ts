@@ -67,10 +67,11 @@ export interface ClientConfig {
   environment: string
 }
 
-export class ParafinError implements Error, ParafinError {
+export class ParafinError implements Error, ParafinErrorType {
   constructor(body: ParafinErrorType) {
     this.name = 'Parafin Error'
     this.message = body.error_message
+    this.error_message = body.error_message
     this.error_type = body.error_type
     this.display_message = defaultDisplayMessage
 
@@ -90,8 +91,11 @@ export class ParafinError implements Error, ParafinError {
 
   name: string
   message: string
+  error_message: string
   error_type: string
   display_message: string
+  status_code?: number | undefined
+  status_text?: string | undefined
 }
 
 export interface ParafinErrorType {
@@ -100,7 +104,6 @@ export interface ParafinErrorType {
   display_message: string
   status_code?: number
   status_text?: string
-  stack?: string
 }
 
 export const defaultDisplayMessage =
