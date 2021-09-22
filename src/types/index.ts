@@ -42,8 +42,8 @@ export interface OptInRequest extends BasicRequest {
   businessName: string
   ownerFirstName: string
   ownerLastName: string
-  accountManagers: AccountManager[]
-  routingNumber: string
+  accountManagers?: AccountManager[]
+  routingNumber?: string
   accountNumberLastFour: string
   email: string
   postalCode: string
