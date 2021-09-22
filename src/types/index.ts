@@ -109,7 +109,7 @@ export interface ParafinErrorType {
 }
 
 export const defaultDisplayMessage =
-  'This is an issue on our end. We are looking into it!'
+  'We are looking into this issue! Please try again later.'
 const statusCodeToDisplayMessage = new Map<number, string>([
   [200, 'Success!'],
   [201, 'Success!'],
