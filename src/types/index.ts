@@ -109,21 +109,21 @@ export interface ParafinErrorType {
 }
 
 export const defaultDisplayMessage =
-  'Something has gone wrong in our end! We are looking into it.'
+  'This is an issue on our end. We are looking into it!'
 const statusCodeToDisplayMessage = new Map<number, string>([
   [200, 'Success!'],
   [201, 'Success!'],
   [202, 'Success!'],
-  [400, 'You did not provide the right data.'],
+  [400, 'The request was not formatted correctly.'],
   [401, 'You are not authorized for this functionality.'],
   [403, 'You are not authorized for this functionality.'],
-  [404, 'Oops! this is most likely our fault, we are looking into it.'],
-  [408, 'It seems like there is a network issue. Give it another try!'],
-  [500, 'Our server is down, we are looking into it.'],
-  [501, 'Our server is down, we are looking into it.'],
-  [502, 'Our server is down, we are looking into it.'],
-  [503, 'Our server is down, we are looking into it.'],
-  [504, 'Our server is down, we are looking into it.']
+  [404, 'Not found.'],
+  [408, 'Request timed-out.'],
+  [500, 'This is an issue on our end. We are looking into it!'],
+  [501, 'This is an issue on our end. We are looking into it!'],
+  [502, 'This is an issue on our end. We are looking into it!'],
+  [503, 'This is an issue on our end. We are looking into it!'],
+  [504, 'This is an issue on our end. We are looking into it!']
 ])
 
 export function handleParafinError(error: any): ParafinError {
