@@ -6,7 +6,7 @@
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "rollup -c",
-    "lint": "eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+    "lint": "eslint 'src/*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "keywords": [
     "parafin",
