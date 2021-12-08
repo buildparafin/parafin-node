@@ -20,7 +20,7 @@ import {
   ParafinError,
   PartnerResponse,
   ResultAsync
-} from './types'
+} from '../types'
 
 function formatToken(token: string) {
   return `Bearer ${token}`

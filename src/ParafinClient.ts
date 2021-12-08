@@ -1,4 +1,4 @@
-import { post, get, combine } from './request'
+import { post, get, combine } from './helpers/request'
 import {
   businessCoreResponse,
   cashAdvanceResponse,
@@ -7,7 +7,7 @@ import {
   optInResponse,
   partnerResponse,
   postResponse
-} from './responseManager'
+} from './helpers/responseManager'
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,

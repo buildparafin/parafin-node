@@ -10,7 +10,7 @@ import {
   PartnerResponse,
   PostResponse,
   ResultAsync
-} from './types'
+} from '../types'
 
 const promisify = <T>(value: T): Promise<T> =>
   new Promise((resolve, _reject) => {
