@@ -28,7 +28,7 @@ export interface OptInResponse extends BasicResponse {
   opted: boolean | null
 }
 
-export interface StateResponse extends BasicResponse {
+export interface State extends BasicResponse {
   state: 'no_offer' | 'offer' | 'pending' | 'advance' | null
 }
 
@@ -38,7 +38,7 @@ export interface ParafinResponse
     OfferCollectionResponse,
     CashAdvanceResponse,
     OptInResponse,
-    StateResponse {}
+    State {}
 
 export interface BasicRequest {}
 

@@ -254,6 +254,11 @@ function parafinResponse(
       response.estimatedPayoffDate = res.value.estimatedPayoffDate
       response.verified = res.value.verified
       response.totalAdvances = res.value.totalAdvances
+
+      if (!res.value.acceptedAmount && !response.approvalAmount) response.state = 'no_offer'
+      if (!res.value.acceptedAmount && response.approvalAmount) response.state = 'offer'
+      if (res.value.acceptedAmount && !res.value.verified) response.state = 'pending'
+      if (res.value.acceptedAmount && res.value.verified) response.state = 'advance'
     }
   })
 
@@ -262,11 +267,6 @@ function parafinResponse(
       response.opted = res.value.opted
     }
   })
-
-  if (!response.acceptedAmount && !response.approvalAmount) response.state = 'no_offer'
-  if (!response.acceptedAmount && response.approvalAmount) response.state = 'offer'
-  if (response.acceptedAmount && !response.verified) response.state = 'pending'
-  if (response.acceptedAmount && response.verified) response.state = 'advance'
 
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
