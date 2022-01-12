@@ -221,7 +221,8 @@ function parafinResponse(
     paidAmount: null,
     estimatedPayoffDate: null,
     verified: null,
-    totalAdvances: null
+    totalAdvances: null,
+    state: null
   }
 
   mergedResultAsync[0].then((res) => {
@@ -261,6 +262,11 @@ function parafinResponse(
       response.opted = res.value.opted
     }
   })
+
+  if (!response.acceptedAmount && !response.approvalAmount) response.state = 'no_offer'
+  if (!response.acceptedAmount && response.approvalAmount) response.state = 'offer'
+  if (response.acceptedAmount && !response.verified) response.state = 'pending'
+  if (response.acceptedAmount && response.verified) response.state = 'advance'
 
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }

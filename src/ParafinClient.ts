@@ -70,7 +70,7 @@ class Client {
       this.config,
       'partners',
       'businesses/core',
-      'cash_advance_offer_collections_v2',
+      'cash_advance_offer_collections',
       'cash_advances',
       'opt_ins'
     )
@@ -91,7 +91,7 @@ class Client {
   }
 
   async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinError>> {
-    return get('cash_advance_offer_collections_v2', this.config)
+    return get('cash_advance_offer_collections', this.config)
       .andThen(offerCollectionResponse)
       .then(returnOrThrow)
   }
