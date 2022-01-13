@@ -2,12 +2,12 @@ import { post, get, combine } from './helpers/request'
 import {
   businessCoreResponse,
   cashAdvanceResponse,
+  cashAdvanceStateResponse,
   parafinResponse,
   offerCollectionResponse,
   optInResponse,
   partnerResponse,
-  postResponse,
-  cashAdvanceStateResponse
+  postResponse
 } from './helpers/responseManager'
 import {
   BusinessCoreResponse,

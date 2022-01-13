@@ -292,8 +292,8 @@ export {
   businessCoreResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
+  cashAdvanceStateResponse,
   optInResponse,
   postResponse,
-  parafinResponse,
-  cashAdvanceStateResponse
+  parafinResponse
 }
