@@ -3,6 +3,7 @@ import determineState from './determineState'
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,
+  CashAdvanceStateResponse,
   defaultDisplayMessage,
   OfferCollectionResponse,
   OptInResponse,
@@ -10,7 +11,6 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  StateResponse,
   ResultAsync,
   Ok
 } from '../types'
@@ -163,6 +163,25 @@ function cashAdvanceResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
+function cashAdvanceStateResponse(
+  value: [
+    offerCollection: Ok<OfferCollectionResponse, ParafinError>,
+    cashAdvance: Ok<CashAdvanceResponse, ParafinError>
+  ]
+): ResultAsync<CashAdvanceStateResponse, ParafinError> {
+  const response: CashAdvanceStateResponse = {
+    state: null
+  }
+
+  response.state = determineState({
+    approvalAmount: value[0].value.approvalAmount,
+    acceptedAmount: value[1].value.acceptedAmount,
+    verified: value[1].value.verified
+  })
+
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
+}
+
 function optInResponse(
   optIn: AxiosResponse
 ): ResultAsync<OptInResponse, ParafinError> {
@@ -268,25 +287,6 @@ function parafinResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function stateResponse(
-  value: [
-    offerCollection: Ok<OfferCollectionResponse, ParafinError>,
-    cashAdvance: Ok<CashAdvanceResponse, ParafinError>
-  ]
-): ResultAsync<StateResponse, ParafinError> {
-  const response: StateResponse = {
-    state: null
-  }
-
-  response.state = determineState({
-    approvalAmount: value[0].value.approvalAmount,
-    acceptedAmount: value[1].value.acceptedAmount,
-    verified: value[1].value.verified
-  })
-
-  return ResultAsync.fromPromise(promisify(response), handleParafinError)
-}
-
 export {
   partnerResponse,
   businessCoreResponse,
@@ -295,5 +295,5 @@ export {
   optInResponse,
   postResponse,
   parafinResponse,
-  stateResponse
+  cashAdvanceStateResponse
 }

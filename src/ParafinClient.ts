@@ -7,7 +7,7 @@ import {
   optInResponse,
   partnerResponse,
   postResponse,
-  stateResponse
+  cashAdvanceStateResponse
 } from './helpers/responseManager'
 import {
   BusinessCoreResponse,
@@ -24,7 +24,7 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  StateResponse,
+  CashAdvanceStateResponse,
   returnOrThrow
 } from './types'
 
@@ -104,6 +104,14 @@ class Client {
       .then(returnOrThrow)
   }
 
+  async cashAdvanceState(): Promise<Ok<CashAdvanceStateResponse, ParafinError>> {
+    const mergedPromises = Promise.all([this.offerCollection(), this.cashAdvance()])
+
+    return mergedPromises
+      .then(cashAdvanceStateResponse)
+      .then(returnOrThrow)
+  }
+
   async optIn(): Promise<Ok<OptInResponse, ParafinError>> {
     return get('opt_ins', this.config)
       .andThen(optInResponse)
@@ -121,14 +129,6 @@ class Client {
   ): Promise<Ok<PostResponse, ParafinError>> {
     return post('opt_out', this.config, data)
       .andThen(postResponse)
-      .then(returnOrThrow)
-  }
-
-  async state(): Promise<Ok<StateResponse, ParafinError>> {
-    const mergedPromises = Promise.all([this.offerCollection(), this.cashAdvance()])
-
-    return mergedPromises
-      .then(stateResponse)
       .then(returnOrThrow)
   }
 }
