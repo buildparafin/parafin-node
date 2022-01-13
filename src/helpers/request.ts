@@ -26,7 +26,7 @@ function formatToken(token: string) {
   return `Bearer ${token}`
 }
 
-function dataCombine(
+function combine(
   config: ClientConfig,
   ...endpoints: string[]
 ): ResultAsync<
@@ -78,46 +78,6 @@ function dataCombine(
   return ResultAsync.fromPromise(promiseMerge, handleParafinError)
 }
 
-function stateCombine(
-  config: ClientConfig,
-  ...endpoints: string[]
-): ResultAsync<
-  [
-    ResultAsync<OfferCollectionResponse, ParafinError>,
-    ResultAsync<CashAdvanceResponse, ParafinError>
-  ],
-  ParafinError
-> {
-  const requests = endpoints.map((endpoint) =>
-    axios.get(`${config.environment}/${endpoint}`, {
-      headers: {
-        authorization: formatToken(config.token)
-      }
-    })
-  )
-
-  const promiseMerge = axios.all(requests).then(
-    axios.spread(
-      (
-        offerCollection: AxiosResponse,
-        cashAdvance: AxiosResponse
-      ) => {
-        const merge: [
-          ResultAsync<OfferCollectionResponse, ParafinError>,
-          ResultAsync<CashAdvanceResponse, ParafinError>
-        ] = [
-          offerCollectionResponse(offerCollection),
-          cashAdvanceResponse(cashAdvance)
-        ]
-
-        return merge
-      }
-    )
-  )
-
-  return ResultAsync.fromPromise(promiseMerge, handleParafinError)
-}
-
 function get(
   endpoint: string,
   config: ClientConfig
@@ -146,4 +106,4 @@ function post(
   return ResultAsync.fromPromise(request, handleParafinError)
 }
 
-export { get, post, dataCombine, stateCombine }
+export { get, post, combine }

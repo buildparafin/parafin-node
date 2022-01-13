@@ -11,7 +11,8 @@ import {
   PartnerResponse,
   PostResponse,
   StateResponse,
-  ResultAsync
+  ResultAsync,
+  Ok
 } from '../types'
 
 const promisify = <T>(value: T): Promise<T> =>
@@ -275,31 +276,19 @@ function parafinResponse(
 }
 
 function stateResponse(
-  mergedResultAsync: [
-    ResultAsync<OfferCollectionResponse, ParafinError>,
-    ResultAsync<CashAdvanceResponse, ParafinError>
+  value: [
+    offerCollection: Ok<OfferCollectionResponse, ParafinError>,
+    cashAdvance: Ok<CashAdvanceResponse, ParafinError>
   ]
 ): ResultAsync<StateResponse, ParafinError> {
   const response: StateResponse = {
     state: null
   }
 
-  let approvalAmount: string | null = null
-
-  mergedResultAsync[0].then((res) => {
-    if (res.isOk()) {
-      approvalAmount = res.value.approvalAmount
-    }
-  })
-
-  mergedResultAsync[1].then((res) => {
-    if (res.isOk()) {
-      response.state = determineState({
-        approvalAmount: approvalAmount,
-        acceptedAmount: res.value.acceptedAmount,
-        verified: res.value.verified
-      })
-    }
+  response.state = determineState({
+    approvalAmount: value[0].value.approvalAmount,
+    acceptedAmount: value[1].value.acceptedAmount,
+    verified: value[1].value.verified
   })
 
   return ResultAsync.fromPromise(promisify(response), handleParafinError)

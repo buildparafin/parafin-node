@@ -1,4 +1,4 @@
-import { post, get, dataCombine, stateCombine } from './helpers/request'
+import { post, get, combine } from './helpers/request'
 import {
   businessCoreResponse,
   cashAdvanceResponse,
@@ -68,7 +68,7 @@ class Client {
   }
 
   async data(): Promise<Ok<ParafinResponse, ParafinError>> {
-    return dataCombine(
+    return combine(
       this.config,
       'partners',
       'businesses/core',
@@ -125,12 +125,10 @@ class Client {
   }
 
   async state(): Promise<Ok<StateResponse, ParafinError>> {
-    return stateCombine(
-      this.config,
-      'cash_advance_offer_collections',
-      'cash_advances'
-    )
-      .andThen(stateResponse)
+    const mergedPromises = Promise.all([this.offerCollection(), this.cashAdvance()])
+
+    return mergedPromises
+      .then(stateResponse)
       .then(returnOrThrow)
   }
 }
