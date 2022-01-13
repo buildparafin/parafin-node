@@ -224,8 +224,7 @@ function parafinResponse(
     paidAmount: null,
     estimatedPayoffDate: null,
     verified: null,
-    totalAdvances: null,
-    state: null
+    totalAdvances: null
   }
 
   mergedResultAsync[0].then((res) => {
@@ -257,12 +256,6 @@ function parafinResponse(
       response.estimatedPayoffDate = res.value.estimatedPayoffDate
       response.verified = res.value.verified
       response.totalAdvances = res.value.totalAdvances
-
-      response.state = determineState({
-        approvalAmount: response.approvalAmount,
-        acceptedAmount: res.value.acceptedAmount,
-        verified: res.value.verified
-      })
     }
   })
 
