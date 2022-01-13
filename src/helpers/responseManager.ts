@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios'
-import determineState from './determineState'
+import determineCashAdvanceState from './determineCashAdvanceState'
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,
@@ -173,7 +173,7 @@ function cashAdvanceStateResponse(
     state: null
   }
 
-  response.state = determineState({
+  response.state = determineCashAdvanceState({
     approvalAmount: value[0].value.approvalAmount,
     acceptedAmount: value[1].value.acceptedAmount,
     verified: value[1].value.verified

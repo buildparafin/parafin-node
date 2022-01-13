@@ -1,14 +1,14 @@
-type StateProps = {
+type CashAdvanceStateProps = {
   approvalAmount: string | null
   acceptedAmount: string | null
   verified: boolean | null
 }
 
-const determineState = ({
+const determineCashAdvanceState = ({
   approvalAmount,
   acceptedAmount,
   verified
-}: StateProps) => {
+}: CashAdvanceStateProps) => {
   if (!acceptedAmount && !approvalAmount) return 'no_offer'
   if (!acceptedAmount && approvalAmount) return 'offer'
   if (acceptedAmount && !verified) return 'pending'
@@ -17,4 +17,4 @@ const determineState = ({
   return null
 }
 
-export default determineState
+export default determineCashAdvanceState
