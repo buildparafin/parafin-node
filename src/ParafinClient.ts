@@ -12,6 +12,7 @@ import {
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,
+  CashAdvanceStateResponse,
   ClientConfig,
   defaultDisplayMessage,
   environment,
@@ -24,7 +25,6 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  CashAdvanceStateResponse,
   returnOrThrow
 } from './types'
 
