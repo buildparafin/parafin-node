@@ -2,6 +2,7 @@ import { post, get, combine } from './helpers/request'
 import {
   businessCoreResponse,
   cashAdvanceResponse,
+  cashAdvanceStateResponse,
   parafinResponse,
   offerCollectionResponse,
   optInResponse,
@@ -11,6 +12,7 @@ import {
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,
+  CashAdvanceStateResponse,
   ClientConfig,
   defaultDisplayMessage,
   environment,
@@ -70,7 +72,7 @@ class Client {
       this.config,
       'partners',
       'businesses/core',
-      'cash_advance_offer_collections_v2',
+      'cash_advance_offer_collections',
       'cash_advances',
       'opt_ins'
     )
@@ -91,7 +93,7 @@ class Client {
   }
 
   async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinError>> {
-    return get('cash_advance_offer_collections_v2', this.config)
+    return get('cash_advance_offer_collections', this.config)
       .andThen(offerCollectionResponse)
       .then(returnOrThrow)
   }
@@ -99,6 +101,14 @@ class Client {
   async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinError>> {
     return get('cash_advances', this.config)
       .andThen(cashAdvanceResponse)
+      .then(returnOrThrow)
+  }
+
+  async cashAdvanceState(): Promise<Ok<CashAdvanceStateResponse, ParafinError>> {
+    const mergedPromises = Promise.all([this.offerCollection(), this.cashAdvance()])
+
+    return mergedPromises
+      .then(cashAdvanceStateResponse)
       .then(returnOrThrow)
   }
 
