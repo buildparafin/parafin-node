@@ -1,4 +1,4 @@
-import { post, get, combine } from './helpers/request'
+import { post, get, dataCombine, stateCombine } from './helpers/request'
 import {
   businessCoreResponse,
   cashAdvanceResponse,
@@ -6,7 +6,8 @@ import {
   offerCollectionResponse,
   optInResponse,
   partnerResponse,
-  postResponse
+  postResponse,
+  stateResponse
 } from './helpers/responseManager'
 import {
   BusinessCoreResponse,
@@ -23,6 +24,7 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
+  StateResponse,
   returnOrThrow
 } from './types'
 
@@ -66,7 +68,7 @@ class Client {
   }
 
   async data(): Promise<Ok<ParafinResponse, ParafinError>> {
-    return combine(
+    return dataCombine(
       this.config,
       'partners',
       'businesses/core',
@@ -119,6 +121,16 @@ class Client {
   ): Promise<Ok<PostResponse, ParafinError>> {
     return post('opt_out', this.config, data)
       .andThen(postResponse)
+      .then(returnOrThrow)
+  }
+
+  async state(): Promise<Ok<StateResponse, ParafinError>> {
+    return stateCombine(
+      this.config,
+      'cash_advance_offer_collections',
+      'cash_advances'
+    )
+      .andThen(stateResponse)
       .then(returnOrThrow)
   }
 }

@@ -1,4 +1,5 @@
 import { AxiosResponse } from 'axios'
+import determineState from './determineState'
 import {
   BusinessCoreResponse,
   CashAdvanceResponse,
@@ -9,6 +10,7 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
+  StateResponse,
   ResultAsync
 } from '../types'
 
@@ -255,16 +257,48 @@ function parafinResponse(
       response.verified = res.value.verified
       response.totalAdvances = res.value.totalAdvances
 
-      if (!res.value.acceptedAmount && !response.approvalAmount) response.state = 'no_offer'
-      if (!res.value.acceptedAmount && response.approvalAmount) response.state = 'offer'
-      if (res.value.acceptedAmount && !res.value.verified) response.state = 'pending'
-      if (res.value.acceptedAmount && res.value.verified) response.state = 'advance'
+      response.state = determineState({
+        approvalAmount: response.approvalAmount,
+        acceptedAmount: res.value.acceptedAmount,
+        verified: res.value.verified
+      })
     }
   })
 
   mergedResultAsync[4].then((res) => {
     if (res.isOk()) {
       response.opted = res.value.opted
+    }
+  })
+
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
+}
+
+function stateResponse(
+  mergedResultAsync: [
+    ResultAsync<OfferCollectionResponse, ParafinError>,
+    ResultAsync<CashAdvanceResponse, ParafinError>
+  ]
+): ResultAsync<StateResponse, ParafinError> {
+  const response: StateResponse = {
+    state: null
+  }
+
+  let approvalAmount: string | null = null
+
+  mergedResultAsync[0].then((res) => {
+    if (res.isOk()) {
+      approvalAmount = res.value.approvalAmount
+    }
+  })
+
+  mergedResultAsync[1].then((res) => {
+    if (res.isOk()) {
+      response.state = determineState({
+        approvalAmount: approvalAmount,
+        acceptedAmount: res.value.acceptedAmount,
+        verified: res.value.verified
+      })
     }
   })
 
@@ -278,5 +312,6 @@ export {
   cashAdvanceResponse,
   optInResponse,
   postResponse,
-  parafinResponse
+  parafinResponse,
+  stateResponse
 }
