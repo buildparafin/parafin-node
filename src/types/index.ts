@@ -35,8 +35,10 @@ export interface ParafinResponse
     CashAdvanceResponse,
     OptInResponse {}
 
+export type CashAdvanceState = 'no_offer' | 'offer' | 'pending' | 'advance' | null
+
 export interface CashAdvanceStateResponse extends BasicResponse {
-  state: 'no_offer' | 'offer' | 'pending' | 'advance' | null
+  state: CashAdvanceState
 }
 
 export interface BasicRequest {}
