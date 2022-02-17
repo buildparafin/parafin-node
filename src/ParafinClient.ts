@@ -70,7 +70,7 @@ class Client {
     }
   }
 
-  async data(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
+  async dataSingleBiz(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
       { business_id: businessId },
@@ -89,10 +89,10 @@ class Client {
 
     if (bizCores.isOk() && partner.isOk()) {
       bizCores.value.map(async (bizCore) => {
-        const combinedRequest = await this.data(bizCore.businessId!)
-        if (combinedRequest.isOk()) {
+        const combined = await this.dataSingleBiz(bizCore.businessId!)
+        if (combined.isOk()) {
           output.push({
-            ...combinedRequest.value,
+            ...combined.value,
             businessId: bizCore.businessId,
             externalId: bizCore.externalId,
             partnerId: partner.value.partnerId,
