@@ -28,11 +28,12 @@ function formatToken(token: string) {
 
 function combine(
   config: ClientConfig,
+  params?: BasicRequest,
   ...endpoints: string[]
 ): ResultAsync<
   [
     ResultAsync<PartnerResponse, ParafinError>,
-    ResultAsync<BusinessCoreResponse, ParafinError>,
+    ResultAsync<BusinessCoreResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
     ResultAsync<OptInResponse, ParafinError>
@@ -41,6 +42,7 @@ function combine(
 > {
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
+      params,
       headers: {
         authorization: formatToken(config.token)
       }
@@ -58,7 +60,7 @@ function combine(
       ) => {
         const merge: [
           ResultAsync<PartnerResponse, ParafinError>,
-          ResultAsync<BusinessCoreResponse, ParafinError>,
+          ResultAsync<BusinessCoreResponse[], ParafinError>,
           ResultAsync<OfferCollectionResponse, ParafinError>,
           ResultAsync<CashAdvanceResponse, ParafinError>,
           ResultAsync<OptInResponse, ParafinError>
@@ -80,9 +82,11 @@ function combine(
 
 function get(
   endpoint: string,
-  config: ClientConfig
+  config: ClientConfig,
+  params?: BasicRequest
 ): ResultAsync<AxiosResponse<any>, ParafinError> {
   const request = axios.get(`${config.environment}/${endpoint}`, {
+    params,
     headers: {
       authorization: formatToken(config.token)
     }
