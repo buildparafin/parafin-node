@@ -224,8 +224,6 @@ function postResponse(
 
 function parafinResponse(
   mergedResultAsync: [
-    ResultAsync<PartnerResponse, ParafinError>,
-    ResultAsync<BusinessCoreResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
     ResultAsync<OptInResponse, ParafinError>
@@ -249,26 +247,11 @@ function parafinResponse(
 
   mergedResultAsync[0].then((res) => {
     if (res.isOk()) {
-      response.partnerId = res.value.partnerId
-      response.partnerName = res.value.partnerName
-      response.partnerSlug = res.value.partnerSlug
-    }
-  })
-
-  mergedResultAsync[1].then((res) => {
-    if (res.isOk()) {
-      response.businessId = res.value[0].businessId
-      response.externalId = res.value[0].externalId
-    }
-  })
-
-  mergedResultAsync[2].then((res) => {
-    if (res.isOk()) {
       response.approvalAmount = res.value.approvalAmount
     }
   })
 
-  mergedResultAsync[3].then((res) => {
+  mergedResultAsync[1].then((res) => {
     if (res.isOk()) {
       response.acceptedAmount = res.value.acceptedAmount
       response.outstandingAmount = res.value.outstandingAmount
@@ -279,7 +262,7 @@ function parafinResponse(
     }
   })
 
-  mergedResultAsync[4].then((res) => {
+  mergedResultAsync[2].then((res) => {
     if (res.isOk()) {
       response.opted = res.value.opted
     }

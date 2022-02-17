@@ -73,9 +73,7 @@ class Client {
   async data(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
-      { businessId },
-      'partners',
-      'businesses/core',
+      { business_id: businessId },
       'cash_advance_offer_collections',
       'cash_advances',
       'opt_ins'
@@ -85,14 +83,22 @@ class Client {
   }
 
   async dataMultiBiz(): Promise<Ok<ParafinResponse[], ParafinError>> {
+    const partner = await this.partner()
     const bizCores = await this.businessCore()
     const output: ParafinResponse[] = []
 
-    if (bizCores.isOk()) {
+    if (bizCores.isOk() && partner.isOk()) {
       bizCores.value.map(async (bizCore) => {
         const combinedRequest = await this.data(bizCore.businessId!)
         if (combinedRequest.isOk()) {
-          output.push(combinedRequest.value)
+          output.push({
+            ...combinedRequest.value,
+            businessId: bizCore.businessId,
+            externalId: bizCore.externalId,
+            partnerId: partner.value.partnerId,
+            partnerName: partner.value.partnerName,
+            partnerSlug: partner.value.partnerSlug
+          })
         }
       })
     }
