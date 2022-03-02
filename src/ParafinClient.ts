@@ -93,7 +93,7 @@ class Client {
         if (combined.isOk()) {
           output.push({
             ...combined.value,
-            ...partner,
+            ...partner.value,
             ...bizCore
           })
         }
