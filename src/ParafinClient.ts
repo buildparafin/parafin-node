@@ -93,16 +93,15 @@ class Client {
         if (combined.isOk()) {
           output.push({
             ...combined.value,
-            businessId: bizCore.businessId,
-            externalId: bizCore.externalId,
-            partnerId: partner.value.partnerId,
-            partnerName: partner.value.partnerName,
-            partnerSlug: partner.value.partnerSlug
+            ...partner,
+            ...bizCore
           })
         }
       })
     }
-    return ResultAsync.fromPromise(promisify(output), handleParafinError).then(returnOrThrow)
+    return ResultAsync
+      .fromPromise(promisify(output), handleParafinError)
+      .then(returnOrThrow)
   }
 
   async partner(): Promise<Ok<PartnerResponse, ParafinError>> {
