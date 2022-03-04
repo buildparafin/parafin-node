@@ -90,7 +90,10 @@ class Client {
     const output = await Promise.all(
       bizCores.value.map(async (bizCore) => {
         const response = await this.data(bizCore.businessId!)
-        return response.value
+        return {
+          ...response.value,
+          ...bizCore
+        }
       })
     )
 
