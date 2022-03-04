@@ -67,9 +67,10 @@ class Client {
     }
   }
 
-  async data(): Promise<Ok<ParafinResponse, ParafinError>> {
+  async data(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
+      { business_id: businessId },
       'partners',
       'businesses/core',
       'cash_advance_offer_collections',
@@ -86,7 +87,7 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async businessCore(): Promise<Ok<BusinessCoreResponse, ParafinError>> {
+  async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinError>> {
     return get('businesses/core', this.config)
       .andThen(businessCoreResponse)
       .then(returnOrThrow)
