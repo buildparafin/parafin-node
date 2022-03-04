@@ -15,12 +15,12 @@ import {
   Ok
 } from '../types'
 
-const promisify = <T>(value: T): Promise<T> =>
+export const promisify = <T>(value: T): Promise<T> =>
   new Promise((resolve, _reject) => {
     resolve(value)
   })
 
-const handleParafinError = (error: any): ParafinError =>
+export const handleParafinError = (error: any): ParafinError =>
   new ParafinError({
     error_type: 'RESPONSE_MANAGER_ERROR',
     error_message: 'Unable to process a response',

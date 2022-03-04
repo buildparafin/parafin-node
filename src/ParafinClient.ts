@@ -7,7 +7,9 @@ import {
   offerCollectionResponse,
   optInResponse,
   partnerResponse,
-  postResponse
+  postResponse,
+  promisify,
+  handleParafinError
 } from './helpers/responseManager'
 import {
   BusinessCoreResponse,
@@ -25,7 +27,8 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  returnOrThrow
+  returnOrThrow,
+  ResultAsync
 } from './types'
 
 class Client {
@@ -67,7 +70,7 @@ class Client {
     }
   }
 
-  async data(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
+  async data(businessId?: string): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
       { business_id: businessId },
@@ -78,6 +81,26 @@ class Client {
       'opt_ins'
     )
       .andThen(parafinResponse)
+      .then(returnOrThrow)
+  }
+
+  async dataMultiBiz(): Promise<Ok<ParafinResponse[], ParafinError>> {
+    const partner = await this.partner()
+    const bizCores = await this.businessCores()
+
+    const output = await Promise.all(
+      bizCores.value.map(async (bizCore) => {
+        const bizData = await this.data(bizCore.businessId!)
+        return {
+          ...bizData.value,
+          ...partner.value,
+          ...bizCore
+        }
+      })
+    )
+
+    return ResultAsync
+      .fromPromise(promisify(output), handleParafinError)
       .then(returnOrThrow)
   }
 
