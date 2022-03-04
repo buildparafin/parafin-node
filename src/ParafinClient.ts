@@ -85,17 +85,12 @@ class Client {
   }
 
   async dataMultiBiz(): Promise<Ok<ParafinResponse[], ParafinError>> {
-    const partner = await this.partner()
     const bizCores = await this.businessCores()
 
     const output = await Promise.all(
       bizCores.value.map(async (bizCore) => {
-        const bizData = await this.data(bizCore.businessId!)
-        return {
-          ...bizData.value,
-          ...partner.value,
-          ...bizCore
-        }
+        const response = await this.data(bizCore.businessId!)
+        return response.value
       })
     )
 
