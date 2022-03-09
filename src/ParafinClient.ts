@@ -75,7 +75,7 @@ class Client {
       this.config,
       { business_id: businessId },
       'partners',
-      'businesses/core',
+      'business_cores',
       'cash_advance_offer_collections',
       'cash_advances',
       'opt_ins'
@@ -106,7 +106,7 @@ class Client {
   }
 
   async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinError>> {
-    return get('businesses/core', this.config)
+    return get('business_cores', this.config)
       .andThen(businessCoreResponse)
       .then(returnOrThrow)
   }
