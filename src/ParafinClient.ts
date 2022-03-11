@@ -70,7 +70,7 @@ class Client {
     }
   }
 
-  async data(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
+  async dataByBusiness(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
       { business_id: businessId },
@@ -84,12 +84,12 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async dataMultiBiz(): Promise<Ok<ParafinResponse[], ParafinError>> {
+  async data(): Promise<Ok<ParafinResponse[], ParafinError>> {
     const bizCores = await this.businessCores()
 
     const output = await Promise.all(
       bizCores.value.map(async (bizCore) => {
-        const response = await this.data(bizCore.businessId!)
+        const response = await this.dataByBusiness(bizCore.businessId!)
         return response.value
       })
     )
