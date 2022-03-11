@@ -70,7 +70,7 @@ class Client {
     }
   }
 
-  async data(businessId?: string): Promise<Ok<ParafinResponse, ParafinError>> {
+  async data(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
       { business_id: businessId },
