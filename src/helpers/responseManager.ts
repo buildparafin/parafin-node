@@ -15,12 +15,12 @@ import {
   Ok
 } from '../types'
 
-const promisify = <T>(value: T): Promise<T> =>
+export const promisify = <T>(value: T): Promise<T> =>
   new Promise((resolve, _reject) => {
     resolve(value)
   })
 
-const handleParafinError = (error: any): ParafinError =>
+export const handleParafinError = (error: any): ParafinError =>
   new ParafinError({
     error_type: 'RESPONSE_MANAGER_ERROR',
     error_message: 'Unable to process a response',
@@ -63,17 +63,18 @@ function partnerResponse(
 }
 
 function businessCoreResponse(
-  businessCore: AxiosResponse
-): ResultAsync<BusinessCoreResponse, ParafinError> {
-  const results = baseResponse(businessCore)
-  const response: BusinessCoreResponse = {
-    businessId: null,
-    externalId: null
-  }
+  businessCores: AxiosResponse
+): ResultAsync<BusinessCoreResponse[], ParafinError> {
+  const results = baseResponse(businessCores)
+  const response: BusinessCoreResponse[] = []
 
   if (results != null && results.length > 0) {
-    response.businessId = results[0].id
-    response.externalId = results[0].external_id
+    results.map((bizCore: any) => {
+      response.push({
+        businessId: bizCore.id,
+        externalId: bizCore.external_id
+      })
+    })
   }
 
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
@@ -224,7 +225,7 @@ function postResponse(
 function parafinResponse(
   mergedResultAsync: [
     ResultAsync<PartnerResponse, ParafinError>,
-    ResultAsync<BusinessCoreResponse, ParafinError>,
+    ResultAsync<BusinessCoreResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
     ResultAsync<OptInResponse, ParafinError>
@@ -256,8 +257,8 @@ function parafinResponse(
 
   mergedResultAsync[1].then((res) => {
     if (res.isOk()) {
-      response.businessId = res.value.businessId
-      response.externalId = res.value.externalId
+      response.businessId = res.value[0].businessId
+      response.externalId = res.value[0].externalId
     }
   })
 
