@@ -82,11 +82,9 @@ function combine(
 
 function get(
   endpoint: string,
-  config: ClientConfig,
-  params?: BasicRequest
+  config: ClientConfig
 ): ResultAsync<AxiosResponse<any>, ParafinError> {
   const request = axios.get(`${config.environment}/${endpoint}`, {
-    params,
     headers: {
       authorization: formatToken(config.token)
     }

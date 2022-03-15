@@ -111,22 +111,20 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async offerCollection(businessId?: string): Promise<Ok<OfferCollectionResponse, ParafinError>> {
-    return get('cash_advance_offer_collections', this.config, { business_id: businessId })
+  async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinError>> {
+    return get('cash_advance_offer_collections', this.config)
       .andThen(offerCollectionResponse)
       .then(returnOrThrow)
   }
 
-  async cashAdvance(businessId?: string): Promise<Ok<CashAdvanceResponse, ParafinError>> {
-    return get('cash_advances', this.config, { business_id: businessId })
+  async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinError>> {
+    return get('cash_advances', this.config)
       .andThen(cashAdvanceResponse)
       .then(returnOrThrow)
   }
 
-  async cashAdvanceState(businessExternalId: string): Promise<Ok<CashAdvanceStateResponse, ParafinError>> {
-    const bizCores = await this.businessCores()
-    const businessId = bizCores.value.find((bizCore) => bizCore.externalId === businessExternalId)?.businessId
-    const mergedPromises = Promise.all([this.offerCollection(businessId!), this.cashAdvance(businessId!)])
+  async cashAdvanceState(): Promise<Ok<CashAdvanceStateResponse, ParafinError>> {
+    const mergedPromises = Promise.all([this.offerCollection(), this.cashAdvance()])
 
     return mergedPromises
       .then(cashAdvanceStateResponse)
