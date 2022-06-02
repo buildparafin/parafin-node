@@ -286,8 +286,10 @@ function parafinResponse(
 
   mergedResultAsync[2].then((res) => {
     if (res.isOk()) {
-      response.legalBusinessName = res.value[0].legalBusinessName
-      response.name = res.value[0].name
+      if (res.value.length > 0) {
+        response.legalBusinessName = res.value[0].legalBusinessName
+        response.name = res.value[0].name
+      }
     }
   })
 
