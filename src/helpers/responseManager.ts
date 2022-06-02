@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 import determineCashAdvanceState from './determineCashAdvanceState'
 import {
   BusinessCoreResponse,
+  BusinessDetailsResponse,
   CashAdvanceResponse,
   CashAdvanceStateResponse,
   defaultDisplayMessage,
@@ -57,6 +58,24 @@ function partnerResponse(
     response.partnerId = results[0].id
     response.partnerName = results[0].name
     response.partnerSlug = results[0].slug
+  }
+
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
+}
+
+function businessDetailsResponse(
+  businessDetails: AxiosResponse
+): ResultAsync<BusinessDetailsResponse[], ParafinError> {
+  const results = baseResponse(businessDetails)
+  const response: BusinessDetailsResponse[] = []
+
+  if (results != null && results.length > 0) {
+    results.map((bizDetails: any) => {
+      response.push({
+        legalBusinessName: bizDetails.legal_business_name,
+        name: bizDetails.name
+      })
+    })
   }
 
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
@@ -226,6 +245,7 @@ function parafinResponse(
   mergedResultAsync: [
     ResultAsync<PartnerResponse, ParafinError>,
     ResultAsync<BusinessCoreResponse[], ParafinError>,
+    ResultAsync<BusinessDetailsResponse[], ParafinError>,    
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
     ResultAsync<OptInResponse, ParafinError>
@@ -244,7 +264,9 @@ function parafinResponse(
     paidAmount: null,
     estimatedPayoffDate: null,
     verified: null,
-    totalAdvances: null
+    totalAdvances: null,
+    legalBusinessName: null,
+    name: null
   }
 
   mergedResultAsync[0].then((res) => {
@@ -264,11 +286,18 @@ function parafinResponse(
 
   mergedResultAsync[2].then((res) => {
     if (res.isOk()) {
-      response.approvalAmount = res.value.approvalAmount
+      response.legalBusinessName = res.value[0].legalBusinessName
+      response.name = res.value[0].name
     }
   })
 
   mergedResultAsync[3].then((res) => {
+    if (res.isOk()) {
+      response.approvalAmount = res.value.approvalAmount
+    }
+  })
+
+  mergedResultAsync[4].then((res) => {
     if (res.isOk()) {
       response.acceptedAmount = res.value.acceptedAmount
       response.outstandingAmount = res.value.outstandingAmount
@@ -279,7 +308,7 @@ function parafinResponse(
     }
   })
 
-  mergedResultAsync[4].then((res) => {
+  mergedResultAsync[5].then((res) => {
     if (res.isOk()) {
       response.opted = res.value.opted
     }
@@ -291,6 +320,7 @@ function parafinResponse(
 export {
   partnerResponse,
   businessCoreResponse,
+  businessDetailsResponse,
   offerCollectionResponse,
   cashAdvanceResponse,
   cashAdvanceStateResponse,

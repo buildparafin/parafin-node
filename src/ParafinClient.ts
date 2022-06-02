@@ -1,6 +1,7 @@
 import { post, get, combine } from './helpers/request'
 import {
   businessCoreResponse,
+  businessDetailsResponse,
   cashAdvanceResponse,
   cashAdvanceStateResponse,
   parafinResponse,
@@ -13,6 +14,7 @@ import {
 } from './helpers/responseManager'
 import {
   BusinessCoreResponse,
+  BusinessDetailsResponse,
   CashAdvanceResponse,
   CashAdvanceStateResponse,
   ClientConfig,
@@ -76,6 +78,7 @@ class Client {
       { business_id: businessId },
       'partners',
       'business_cores',
+      'businesses',
       'cash_advance_offer_collections',
       'cash_advances',
       'opt_ins'
@@ -108,6 +111,12 @@ class Client {
   async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinError>> {
     return get('business_cores', this.config)
       .andThen(businessCoreResponse)
+      .then(returnOrThrow)
+  }
+
+  async businessDetails(): Promise<Ok<BusinessDetailsResponse[], ParafinError>> {
+    return get('businesses', this.config)
+      .andThen(businessDetailsResponse)
       .then(returnOrThrow)
   }
 

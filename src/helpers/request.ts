@@ -3,6 +3,7 @@ import caseConverter from 'axios-case-converter'
 
 import {
   businessCoreResponse,
+  businessDetailsResponse,
   cashAdvanceResponse,
   offerCollectionResponse,
   partnerResponse,
@@ -12,6 +13,7 @@ import {
 import {
   BasicRequest,
   BusinessCoreResponse,
+  BusinessDetailsResponse,
   CashAdvanceResponse,
   ClientConfig,
   handleParafinError,
@@ -34,6 +36,7 @@ function combine(
   [
     ResultAsync<PartnerResponse, ParafinError>,
     ResultAsync<BusinessCoreResponse[], ParafinError>,
+    ResultAsync<BusinessDetailsResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
     ResultAsync<OptInResponse, ParafinError>
@@ -54,6 +57,7 @@ function combine(
       (
         partner: AxiosResponse,
         businessCores: AxiosResponse,
+        businessDetails: AxiosResponse,
         offerCollection: AxiosResponse,
         cashAdvance: AxiosResponse,
         optIn: AxiosResponse
@@ -61,12 +65,14 @@ function combine(
         const merge: [
           ResultAsync<PartnerResponse, ParafinError>,
           ResultAsync<BusinessCoreResponse[], ParafinError>,
+          ResultAsync<BusinessDetailsResponse[], ParafinError>,
           ResultAsync<OfferCollectionResponse, ParafinError>,
           ResultAsync<CashAdvanceResponse, ParafinError>,
           ResultAsync<OptInResponse, ParafinError>
         ] = [
           partnerResponse(partner),
           businessCoreResponse(businessCores),
+          businessDetailsResponse(businessDetails),
           offerCollectionResponse(offerCollection),
           cashAdvanceResponse(cashAdvance),
           optInResponse(optIn)
