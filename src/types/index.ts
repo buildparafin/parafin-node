@@ -11,6 +11,11 @@ export interface BusinessCoreResponse extends BasicResponse {
   externalId: string | null
 }
 
+export interface BusinessDetailsResponse extends BasicResponse {
+  legalBusinessName: string | null
+  name: string | null
+}
+
 export interface OfferCollectionResponse extends BasicResponse {
   approvalAmount: string | null
 }
@@ -31,6 +36,7 @@ export interface OptInResponse extends BasicResponse {
 export interface ParafinResponse
   extends PartnerResponse,
     BusinessCoreResponse,
+    BusinessDetailsResponse,
     OfferCollectionResponse,
     CashAdvanceResponse,
     OptInResponse {}
