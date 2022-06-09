@@ -44,6 +44,7 @@ export interface ParafinResponse
 export type CashAdvanceState = 'no_offer' | 'offer' | 'pending' | 'advance' | null
 
 export interface CashAdvanceStateResponse extends BasicResponse {
+  businessExternalId: string
   state: CashAdvanceState
 }
 
