@@ -1,8 +1,8 @@
 import { CashAdvanceState, ParafinResponse } from '../types'
 
 const determineCashAdvanceState = ({
-  acceptedAmount,
   approvalAmount,
+  acceptedAmount,
   verified
 }: ParafinResponse): CashAdvanceState => {
   if (!acceptedAmount && !approvalAmount) return 'no_offer'
