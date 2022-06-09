@@ -132,7 +132,7 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async cashAdvanceState(): Promise<Ok<CashAdvanceStateResponse[], ParafinError>> {
+  async cashAdvanceStates(): Promise<Ok<CashAdvanceStateResponse[], ParafinError>> {
     const data = await this.data()
 
     const output = data.value.map((biz) => {
