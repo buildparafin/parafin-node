@@ -1,9 +1,9 @@
+import determineCashAdvanceState from './helpers/determineCashAdvanceState'
 import { post, get, combine } from './helpers/request'
 import {
   businessCoreResponse,
   businessDetailsResponse,
   cashAdvanceResponse,
-  cashAdvanceStateResponse,
   parafinResponse,
   offerCollectionResponse,
   optInResponse,
@@ -132,11 +132,18 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async cashAdvanceState(): Promise<Ok<CashAdvanceStateResponse, ParafinError>> {
-    const mergedPromises = Promise.all([this.offerCollection(), this.cashAdvance()])
+  async cashAdvanceState(): Promise<Ok<CashAdvanceStateResponse[], ParafinError>> {
+    const data = await this.data()
 
-    return mergedPromises
-      .then(cashAdvanceStateResponse)
+    const output = data.value.map((biz) => {
+      return {
+        businessExternalId: biz.externalId!,
+        state: determineCashAdvanceState(biz)!
+      }
+    })
+
+    return ResultAsync
+      .fromPromise(promisify(output), handleParafinError)
       .then(returnOrThrow)
   }
 
