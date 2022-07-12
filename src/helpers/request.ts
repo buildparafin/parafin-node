@@ -48,7 +48,8 @@ function combine(
       params,
       headers: {
         authorization: formatToken(config.token)
-      }
+      },
+      withCredentials: false
     })
   )
 
@@ -93,7 +94,8 @@ function get(
   const request = axios.get(`${config.environment}/${endpoint}`, {
     headers: {
       authorization: formatToken(config.token)
-    }
+    },
+    withCredentials: false
   })
 
   return ResultAsync.fromPromise(request, handleParafinError)
@@ -104,7 +106,7 @@ function post(
   config: ClientConfig,
   data: BasicRequest
 ): ResultAsync<AxiosResponse<any>, ParafinError> {
-  const client = caseConverter(axios.create())
+  const client = caseConverter(axios.create({ withCredentials: false }))
   const request = client.post(`${config.environment}/${endpoint}`, data, {
     headers: {
       authorization: formatToken(config.token)
