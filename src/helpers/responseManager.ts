@@ -284,6 +284,7 @@ function parafinResponse(
     partnerName: null,
     partnerSlug: null,
     approvalAmount: null,
+    discountAmount: null,
     acceptedAmount: null,
     outstandingAmount: null,
     paidAmount: null,
