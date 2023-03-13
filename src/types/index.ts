@@ -18,6 +18,7 @@ export interface BusinessDetailsResponse extends BasicResponse {
 
 export interface OfferCollectionResponse extends BasicResponse {
   approvalAmount: string | null
+  discountAmount: string | null
 }
 
 export interface CashAdvanceResponse extends BasicResponse {
@@ -41,7 +42,12 @@ export interface ParafinResponse
     CashAdvanceResponse,
     OptInResponse {}
 
-export type CashAdvanceState = 'no_offer' | 'offer' | 'pending' | 'advance' | null
+export type CashAdvanceState =
+  | 'no_offer'
+  | 'offer'
+  | 'pending'
+  | 'advance'
+  | null
 
 export interface CashAdvanceStateResponse extends BasicResponse {
   businessExternalId: string
