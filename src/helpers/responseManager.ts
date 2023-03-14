@@ -118,32 +118,33 @@ function offerCollectionResponse(
 
     const getDiscountAmount = (offer: any, amount: number) => {
       const discount = offer.discounts[0]
-      const discountAmount = getMinimumDiscountAmount(discount, offer)
 
-      const feeAfterDiscount = discount
-        ? Math.floor(+offer.chunk.fee_multiplier * amount) - discountAmount
-        : null
-
-      return feeAfterDiscount
-    }
-
-    const getMinimumDiscountAmount = (discount: any, offer: any) => {
-      const multiplier = discount.multiplier || discount.fee_multiplier_factor
-      if (!multiplier) {
+      if (!discount) {
         return 0
       }
 
+      const offersLength = offer.offers.length
+      const chunkLength = offer.offers[offersLength - 1].chunks.length
+      const chunk = offer.offers[offersLength - 1].chunks[chunkLength - 1]
+      console.log(chunk.amount_range)
+
+      const multiplier = discount.multiplier || discount.fee_multiplier_factor
+
       const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
-      const feeBeforeDiscount = Math.floor(
-        +offer.chunk.fee_multiplier * offer.amount
-      )
+      console.log(TYPE)
+
       const discountMultiplier =
         TYPE === 'Multiplier'
           ? +multiplier
-          : +multiplier * +offer.chunk.fee_multiplier
-      const feeAfterDiscount = Math.round(discountMultiplier * offer.amount)
+          : +multiplier * +chunk.fee_multiplier
+      console.log(discountMultiplier)
 
-      return Math.min(feeAfterDiscount, feeBeforeDiscount)
+      const feeAfterDiscount = Math.round(discountMultiplier * amount)
+      console.log(feeAfterDiscount)
+
+      const discountAmount = Math.floor(+chunk.fee_multiplier * amount)
+
+      return discountAmount
     }
 
     const amounts = openOffers.reduce(
@@ -322,6 +323,7 @@ function parafinResponse(
   mergedResultAsync[3].then((res) => {
     if (res.isOk()) {
       response.approvalAmount = res.value.approvalAmount
+      response.discountAmount = res.value.discountAmount
     }
   })
 

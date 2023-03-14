@@ -72,7 +72,9 @@ class Client {
     }
   }
 
-  async dataByBusiness(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
+  async dataByBusiness(
+    businessId: string
+  ): Promise<Ok<ParafinResponse, ParafinError>> {
     return combine(
       this.config,
       { business_id: businessId },
@@ -97,9 +99,9 @@ class Client {
       })
     )
 
-    return ResultAsync
-      .fromPromise(promisify(output), handleParafinError)
-      .then(returnOrThrow)
+    return ResultAsync.fromPromise(promisify(output), handleParafinError).then(
+      returnOrThrow
+    )
   }
 
   async partner(): Promise<Ok<PartnerResponse, ParafinError>> {
@@ -114,7 +116,9 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async businessDetails(): Promise<Ok<BusinessDetailsResponse[], ParafinError>> {
+  async businessDetails(): Promise<
+    Ok<BusinessDetailsResponse[], ParafinError>
+  > {
     return get('businesses', this.config)
       .andThen(businessDetailsResponse)
       .then(returnOrThrow)
@@ -132,7 +136,9 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async cashAdvanceStates(): Promise<Ok<CashAdvanceStateResponse[], ParafinError>> {
+  async cashAdvanceStates(): Promise<
+    Ok<CashAdvanceStateResponse[], ParafinError>
+  > {
     const data = await this.data()
 
     const output = data.value.map((biz) => {
@@ -142,9 +148,9 @@ class Client {
       }
     })
 
-    return ResultAsync
-      .fromPromise(promisify(output), handleParafinError)
-      .then(returnOrThrow)
+    return ResultAsync.fromPromise(promisify(output), handleParafinError).then(
+      returnOrThrow
+    )
   }
 
   async optIn(): Promise<Ok<OptInResponse, ParafinError>> {
