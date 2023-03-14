@@ -6,6 +6,7 @@
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "rollup -c",
+    "test": "jest ./src",
     "lint": "eslint 'src/*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "keywords": [
@@ -31,11 +32,13 @@
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.6",
+    "@types/jest": "^29.4.1",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@typescript-eslint/parser": "^4.28.2",
     "eslint": "^7.30.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.4.0",
+    "jest": "^29.5.0",
     "prettier": "^2.3.2",
     "rollup": "^2.60.2",
     "rollup-plugin-ts": "^3.0.1",

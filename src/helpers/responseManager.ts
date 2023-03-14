@@ -96,6 +96,24 @@ function businessCoreResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
+function getDiscountAmount(discount: any, offer: any, amount: number) {
+  const multiplier = discount.multiplier || discount.fee_multiplier_factor
+
+  if (!discount || !multiplier) {
+    return 0
+  }
+
+  const chunkLength = offer.chunks.length
+  const chunk = offer.chunks[chunkLength - 1]
+
+  const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
+
+  const discountMultiplier =
+    TYPE === 'Multiplier' ? +multiplier : +multiplier * +chunk.fee_multiplier
+
+  return Math.round(discountMultiplier * amount)
+}
+
 function offerCollectionResponse(
   offerCollection: AxiosResponse
 ): ResultAsync<OfferCollectionResponse, ParafinError> {
@@ -114,27 +132,6 @@ function offerCollectionResponse(
     const openOffers = openCollection[0].offers
     if (!openOffers.length) {
       return ResultAsync.fromPromise(promisify(response), handleParafinError)
-    }
-
-    const getDiscountAmount = (offer: any, amount: number) => {
-      const discount = results[0].discounts[0]
-      const multiplier = discount.multiplier || discount.fee_multiplier_factor
-
-      if (!discount || !multiplier) {
-        return 0
-      }
-
-      const chunkLength = offer.chunks.length
-      const chunk = offer.chunks[chunkLength - 1]
-
-      const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
-
-      const discountMultiplier =
-        TYPE === 'Multiplier'
-          ? +multiplier
-          : +multiplier * +chunk.fee_multiplier
-
-      return Math.round(discountMultiplier * amount)
     }
 
     const amounts = openOffers.reduce(
@@ -156,7 +153,11 @@ function offerCollectionResponse(
         }
 
         return {
-          discountAmount: getDiscountAmount(openOffer, maxOfferAmount),
+          discountAmount: getDiscountAmount(
+            results[0].discounts[0],
+            openOffer,
+            maxOfferAmount
+          ),
           maxOfferAmount
         }
       },
@@ -345,5 +346,6 @@ export {
   cashAdvanceResponse,
   optInResponse,
   postResponse,
-  parafinResponse
+  parafinResponse,
+  getDiscountAmount
 }
