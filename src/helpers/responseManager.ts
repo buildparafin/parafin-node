@@ -117,34 +117,24 @@ function offerCollectionResponse(
     }
 
     const getDiscountAmount = (offer: any, amount: number) => {
-      const discount = offer.discounts[0]
+      const discount = results[0].discounts[0]
+      const multiplier = discount.multiplier || discount.fee_multiplier_factor
 
-      if (!discount) {
+      if (!discount || !multiplier) {
         return 0
       }
 
-      const offersLength = offer.offers.length
-      const chunkLength = offer.offers[offersLength - 1].chunks.length
-      const chunk = offer.offers[offersLength - 1].chunks[chunkLength - 1]
-      console.log(chunk.amount_range)
-
-      const multiplier = discount.multiplier || discount.fee_multiplier_factor
+      const chunkLength = offer.chunks.length
+      const chunk = offer.chunks[chunkLength - 1]
 
       const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
-      console.log(TYPE)
 
       const discountMultiplier =
         TYPE === 'Multiplier'
           ? +multiplier
           : +multiplier * +chunk.fee_multiplier
-      console.log(discountMultiplier)
 
-      const feeAfterDiscount = Math.round(discountMultiplier * amount)
-      console.log(feeAfterDiscount)
-
-      const discountAmount = Math.floor(+chunk.fee_multiplier * amount)
-
-      return discountAmount
+      return Math.round(discountMultiplier * amount)
     }
 
     const amounts = openOffers.reduce(
