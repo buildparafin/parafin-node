@@ -96,20 +96,19 @@ function businessCoreResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function getDiscountAmount(discount: any, offer: any, amount: number) {
+function getDiscountAmount(discount: any, offerChunk: any, amount: number) {
   const multiplier = discount.multiplier || discount.fee_multiplier_factor
 
   if (!discount || !multiplier) {
     return 0
   }
 
-  const chunkLength = offer.chunks.length
-  const chunk = offer.chunks[chunkLength - 1]
-
   const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
 
   const discountMultiplier =
-    TYPE === 'Multiplier' ? +multiplier : +multiplier * +chunk.fee_multiplier
+    TYPE === 'Multiplier'
+      ? +multiplier
+      : +multiplier * +offerChunk.fee_multiplier
 
   return Math.round(discountMultiplier * amount)
 }
@@ -137,16 +136,13 @@ function offerCollectionResponse(
     const amounts = openOffers.reduce(
       function (acc: any, openOffer: any) {
         const chunksLength = openOffer.chunks.length
-        if (
-          chunksLength === 0 ||
-          openOffer.chunks[chunksLength - 1].amount_range.length < 2
-        ) {
+        const offerChunk = openOffer.chunks[chunksLength - 1]
+
+        if (chunksLength === 0 || offerChunk.amount_range.length < 2) {
           return 0
         }
 
-        const maxOfferAmount = Number(
-          openOffer.chunks[chunksLength - 1].amount_range[1]
-        )
+        const maxOfferAmount = Number(offerChunk.amount_range[1])
 
         if (maxOfferAmount < acc.maxOfferAmount) {
           return acc
@@ -155,7 +151,7 @@ function offerCollectionResponse(
         return {
           discountAmount: getDiscountAmount(
             results[0].discounts[0],
-            openOffer,
+            offerChunk,
             maxOfferAmount
           ),
           maxOfferAmount

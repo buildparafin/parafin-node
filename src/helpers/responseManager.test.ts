@@ -12,24 +12,23 @@ describe('getDiscountAmount', () => {
   })
 
   test.each`
-    discount                                               | multiplier | amount   | expected
-    ${{ multplier: '0.01', fee_multiplier_factor: null }}  | ${0.01}    | ${50000} | ${625}
-    ${{ multplier: '0.001', fee_multiplier_factor: null }} | ${0.01}    | ${50000} | ${400}
-    ${{ multplier: '0.05', fee_multiplier_factor: null }}  | ${0.03}    | ${50000} | ${2000}
-    ${{ multplier: null, fee_multiplier_factor: '0.01' }}  | ${0.01}    | ${50000} | ${625}
-    ${{ multplier: null, fee_multiplier_factor: '0.001' }} | ${0.01}    | ${50000} | ${400}
-    ${{ multplier: null, fee_multiplier_factor: '0.05' }}  | ${0.03}    | ${50000} | ${2000}
+    offerMultiplier                       | chunkMultipler | amount   | expected
+    ${{ multplier: '0.01' }}              | ${0.01}        | ${50000} | ${625}
+    ${{ multplier: '0.001' }}             | ${0.01}        | ${50000} | ${400}
+    ${{ multplier: '0.05' }}              | ${0.03}        | ${50000} | ${2000}
+    ${{ fee_multiplier_factor: '0.01' }}  | ${0.01}        | ${50000} | ${625}
+    ${{ fee_multiplier_factor: '0.001' }} | ${0.01}        | ${50000} | ${400}
+    ${{ fee_multiplier_factor: '0.05' }}  | ${0.03}        | ${50000} | ${2000}
   `(
-    'getDiscountAmount($discount, $multiplier, $amount) -> $expected',
-    ({ discount, multiplier, amount, expected }) => {
-      const offer = {
-        chunks: [
-          {
-            multiplier
-          }
-        ]
+    'getDiscountAmount($offerMultiplier, $chunkMultipler, $amount) -> $expected',
+    ({ offerMultiplier, multiplier, amount, expected }) => {
+      const offerChunk = { multiplier }
+      const discount = {
+        multiplier: null,
+        fee_multiplier_factor: null,
+        ...offerMultiplier
       }
-      expect(getDiscountAmount(discount, offer, amount)).toBe(expected)
+      expect(getDiscountAmount(discount, offerChunk, amount)).toBe(expected)
     }
   )
 })
