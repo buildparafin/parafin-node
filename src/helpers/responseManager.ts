@@ -10,7 +10,7 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  ResultAsync,
+  ResultAsync
 } from '../types'
 
 export const promisify = <T>(value: T): Promise<T> =>
@@ -96,12 +96,30 @@ function businessCoreResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
+function getDiscountAmount(discount: any, offerChunk: any, amount: number) {
+  const multiplier = discount.multiplier || discount.fee_multiplier_factor
+
+  if (!discount || !multiplier) {
+    return 0
+  }
+
+  const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
+
+  const discountMultiplier =
+    TYPE === 'Multiplier'
+      ? +multiplier
+      : +multiplier * +offerChunk.fee_multiplier
+
+  return Math.round(discountMultiplier * amount)
+}
+
 function offerCollectionResponse(
   offerCollection: AxiosResponse
 ): ResultAsync<OfferCollectionResponse, ParafinError> {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
-    approvalAmount: null
+    approvalAmount: null,
+    discountAmount: null
   }
 
   if (results != null && results.length > 0) {
@@ -115,26 +133,43 @@ function offerCollectionResponse(
       return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
-    const maxOfferAmount = Math.max.apply(
-      Math,
-      openOffers.map(function (openOffer: any) {
+    const amounts = openOffers.reduce(
+      function (acc: any, openOffer: any) {
         const chunksLength = openOffer.chunks.length
-        if (
-          chunksLength === 0 ||
-          openOffer.chunks[chunksLength - 1].amount_range.length < 2
-        ) {
+        const offerChunk = openOffer.chunks[chunksLength - 1]
+
+        if (chunksLength === 0 || offerChunk.amount_range.length < 2) {
           return 0
         }
-        return Number(
-          openOffer.chunks[openOffer.chunks.length - 1].amount_range[1]
-        )
-      })
+
+        const maxOfferAmount = Number(offerChunk.amount_range[1])
+
+        if (maxOfferAmount < acc.maxOfferAmount) {
+          return acc
+        }
+
+        return {
+          discountAmount: getDiscountAmount(
+            results[0].discounts[0],
+            offerChunk,
+            maxOfferAmount
+          ),
+          maxOfferAmount
+        }
+      },
+      {
+        discountAmount: 0,
+        maxOfferAmount: 0
+      }
     )
+
+    const { discountAmount, maxOfferAmount } = amounts
 
     if (maxOfferAmount === 0) {
       return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
+    response.discountAmount = String(discountAmount)
     response.approvalAmount = String(maxOfferAmount)
   }
 
@@ -223,7 +258,7 @@ function parafinResponse(
   mergedResultAsync: [
     ResultAsync<PartnerResponse, ParafinError>,
     ResultAsync<BusinessCoreResponse[], ParafinError>,
-    ResultAsync<BusinessDetailsResponse[], ParafinError>,    
+    ResultAsync<BusinessDetailsResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
     ResultAsync<OptInResponse, ParafinError>
@@ -237,6 +272,7 @@ function parafinResponse(
     partnerName: null,
     partnerSlug: null,
     approvalAmount: null,
+    discountAmount: null,
     acceptedAmount: null,
     outstandingAmount: null,
     paidAmount: null,
@@ -274,6 +310,7 @@ function parafinResponse(
   mergedResultAsync[3].then((res) => {
     if (res.isOk()) {
       response.approvalAmount = res.value.approvalAmount
+      response.discountAmount = res.value.discountAmount
     }
   })
 
@@ -305,5 +342,6 @@ export {
   cashAdvanceResponse,
   optInResponse,
   postResponse,
-  parafinResponse
+  parafinResponse,
+  getDiscountAmount
 }

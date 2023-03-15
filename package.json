@@ -1,11 +1,12 @@
 {
   "name": "@parafin/parafin-node",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "A node.js client for the Parafin API",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "scripts": {
     "build": "rollup -c",
+    "test": "jest ./src",
     "lint": "eslint 'src/*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "keywords": [
