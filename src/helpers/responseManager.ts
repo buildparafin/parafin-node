@@ -96,19 +96,28 @@ function businessCoreResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function getDiscountAmount(discount: any, offerChunk: any, amount: number) {
-  const multiplier = discount.multiplier || discount.fee_multiplier_factor
+// this type provides no safety where getDiscountAmount is called
+// but at least it does inside getDiscountAmount
+type Discount = {
+  multiplier: string | null
+  fee_multiplier_factor: string | null
+}
+
+function getDiscountAmount(
+  discount: Discount | null,
+  fee: number,
+  amount: number
+) {
+  const multiplier = discount?.multiplier || discount?.fee_multiplier_factor
 
   if (!discount || !multiplier) {
     return 0
   }
 
-  const TYPE = discount.multiplier ? 'Multiplier' : 'Factor'
+  const TYPE = discount?.multiplier ? 'Multiplier' : 'Factor'
 
   const discountMultiplier =
-    TYPE === 'Multiplier'
-      ? +multiplier
-      : +multiplier * +offerChunk.fee_multiplier
+    TYPE === 'Multiplier' ? +multiplier : +multiplier * fee
 
   return Math.round(discountMultiplier * amount)
 }
@@ -151,7 +160,7 @@ function offerCollectionResponse(
         return {
           discountAmount: getDiscountAmount(
             results[0].discounts[0],
-            offerChunk,
+            +offerChunk.fee_multiplier,
             maxOfferAmount
           ),
           maxOfferAmount
@@ -169,7 +178,7 @@ function offerCollectionResponse(
       return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
-    response.discountAmount = String(discountAmount)
+    response.discountAmount = discountAmount > 0 ? String(discountAmount) : null
     response.approvalAmount = String(maxOfferAmount)
   }
 
