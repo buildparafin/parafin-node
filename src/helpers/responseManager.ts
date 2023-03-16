@@ -178,7 +178,7 @@ function offerCollectionResponse(
       return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
 
-    response.discountAmount = String(discountAmount)
+    response.discountAmount = discountAmount > 0 ? String(discountAmount) : null
     response.approvalAmount = String(maxOfferAmount)
   }
 
