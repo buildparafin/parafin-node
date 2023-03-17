@@ -23,6 +23,7 @@ import {
 } from '../types'
 import { ResultAsync } from '../responses/ResultAsync'
 import { handleParafinError } from './handleParafinError'
+import { ParafinError } from '../responses/ParafinError'
 
 function formatToken(token: string) {
   return `Bearer ${token}`
@@ -34,14 +35,14 @@ function combine(
   ...endpoints: string[]
 ): ResultAsync<
   [
-    ResultAsync<PartnerResponse, ParafinErrorType>,
-    ResultAsync<BusinessCoreResponse[], ParafinErrorType>,
-    ResultAsync<BusinessDetailsResponse[], ParafinErrorType>,
-    ResultAsync<OfferCollectionResponse, ParafinErrorType>,
-    ResultAsync<CashAdvanceResponse, ParafinErrorType>,
-    ResultAsync<OptInResponse, ParafinErrorType>,
+    ResultAsync<PartnerResponse, ParafinError>,
+    ResultAsync<BusinessCoreResponse[], ParafinError>,
+    ResultAsync<BusinessDetailsResponse[], ParafinError>,
+    ResultAsync<OfferCollectionResponse, ParafinError>,
+    ResultAsync<CashAdvanceResponse, ParafinError>,
+    ResultAsync<OptInResponse, ParafinError>,
   ],
-  ParafinErrorType
+  ParafinError
 > {
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
@@ -63,12 +64,12 @@ function combine(
         optIn: AxiosResponse,
       ) => {
         const merge: [
-          ResultAsync<PartnerResponse, ParafinErrorType>,
-          ResultAsync<BusinessCoreResponse[], ParafinErrorType>,
-          ResultAsync<BusinessDetailsResponse[], ParafinErrorType>,
-          ResultAsync<OfferCollectionResponse, ParafinErrorType>,
-          ResultAsync<CashAdvanceResponse, ParafinErrorType>,
-          ResultAsync<OptInResponse, ParafinErrorType>,
+          ResultAsync<PartnerResponse, ParafinError>,
+          ResultAsync<BusinessCoreResponse[], ParafinError>,
+          ResultAsync<BusinessDetailsResponse[], ParafinError>,
+          ResultAsync<OfferCollectionResponse, ParafinError>,
+          ResultAsync<CashAdvanceResponse, ParafinError>,
+          ResultAsync<OptInResponse, ParafinError>,
         ] = [
           partnerResponse(partner),
           businessCoreResponse(businessCores),

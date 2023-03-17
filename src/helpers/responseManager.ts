@@ -42,7 +42,7 @@ function baseResponse(response: AxiosResponse) {
   return results
 }
 
-function partnerResponse(partner: AxiosResponse): ResultAsync<PartnerResponse, ParafinErrorType> {
+function partnerResponse(partner: AxiosResponse): ResultAsync<PartnerResponse, ParafinError> {
   const results = baseResponse(partner)
   const response: PartnerResponse = {
     partnerId: null,
@@ -61,7 +61,7 @@ function partnerResponse(partner: AxiosResponse): ResultAsync<PartnerResponse, P
 
 function businessDetailsResponse(
   businessDetails: AxiosResponse,
-): ResultAsync<BusinessDetailsResponse[], ParafinErrorType> {
+): ResultAsync<BusinessDetailsResponse[], ParafinError> {
   const results = baseResponse(businessDetails)
   const response: BusinessDetailsResponse[] = []
 
@@ -79,7 +79,7 @@ function businessDetailsResponse(
 
 function businessCoreResponse(
   businessCores: AxiosResponse,
-): ResultAsync<BusinessCoreResponse[], ParafinErrorType> {
+): ResultAsync<BusinessCoreResponse[], ParafinError> {
   const results = baseResponse(businessCores)
   const response: BusinessCoreResponse[] = []
 
@@ -118,7 +118,7 @@ function getDiscountAmount(discount: Discount | null, fee: number, amount: numbe
 
 function offerCollectionResponse(
   offerCollection: AxiosResponse,
-): ResultAsync<OfferCollectionResponse, ParafinErrorType> {
+): ResultAsync<OfferCollectionResponse, ParafinError> {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
     approvalAmount: null,
@@ -181,7 +181,7 @@ function offerCollectionResponse(
 
 function cashAdvanceResponse(
   cashAdvance: AxiosResponse,
-): ResultAsync<CashAdvanceResponse, ParafinErrorType> {
+): ResultAsync<CashAdvanceResponse, ParafinError> {
   const results = baseResponse(cashAdvance)
   const response: CashAdvanceResponse = {
     acceptedAmount: null,
@@ -216,7 +216,7 @@ function cashAdvanceResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function optInResponse(optIn: AxiosResponse): ResultAsync<OptInResponse, ParafinErrorType> {
+function optInResponse(optIn: AxiosResponse): ResultAsync<OptInResponse, ParafinError> {
   const results = baseResponse(optIn)
   const response: OptInResponse = {
     opted: null,
@@ -233,7 +233,7 @@ function optInResponse(optIn: AxiosResponse): ResultAsync<OptInResponse, Parafin
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function postResponse(postResponse: AxiosResponse): ResultAsync<PostResponse, ParafinErrorType> {
+function postResponse(postResponse: AxiosResponse): ResultAsync<PostResponse, ParafinError> {
   const response: PostResponse = {
     status: 0,
     statusText: '',
@@ -253,14 +253,14 @@ function postResponse(postResponse: AxiosResponse): ResultAsync<PostResponse, Pa
 
 function parafinResponse(
   mergedResultAsync: [
-    ResultAsync<PartnerResponse, ParafinErrorType>,
-    ResultAsync<BusinessCoreResponse[], ParafinErrorType>,
-    ResultAsync<BusinessDetailsResponse[], ParafinErrorType>,
-    ResultAsync<OfferCollectionResponse, ParafinErrorType>,
-    ResultAsync<CashAdvanceResponse, ParafinErrorType>,
-    ResultAsync<OptInResponse, ParafinErrorType>,
+    ResultAsync<PartnerResponse, ParafinError>,
+    ResultAsync<BusinessCoreResponse[], ParafinError>,
+    ResultAsync<BusinessDetailsResponse[], ParafinError>,
+    ResultAsync<OfferCollectionResponse, ParafinError>,
+    ResultAsync<CashAdvanceResponse, ParafinError>,
+    ResultAsync<OptInResponse, ParafinError>,
   ],
-): ResultAsync<ParafinResponse, ParafinErrorType> {
+): ResultAsync<ParafinResponse, ParafinError> {
   const response: ParafinResponse = {
     opted: null,
     businessId: null,
