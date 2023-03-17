@@ -16,13 +16,13 @@ import {
   BusinessDetailsResponse,
   CashAdvanceResponse,
   ClientConfig,
-  handleParafinError,
   OfferCollectionResponse,
   OptInResponse,
-  ParafinError,
+  ParafinErrorType,
   PartnerResponse,
-  ResultAsync,
 } from '../types'
+import { ResultAsync } from '../responses/ResultAsync'
+import { handleParafinError } from './handleParafinError'
 
 function formatToken(token: string) {
   return `Bearer ${token}`
@@ -34,14 +34,14 @@ function combine(
   ...endpoints: string[]
 ): ResultAsync<
   [
-    ResultAsync<PartnerResponse, ParafinError>,
-    ResultAsync<BusinessCoreResponse[], ParafinError>,
-    ResultAsync<BusinessDetailsResponse[], ParafinError>,
-    ResultAsync<OfferCollectionResponse, ParafinError>,
-    ResultAsync<CashAdvanceResponse, ParafinError>,
-    ResultAsync<OptInResponse, ParafinError>,
+    ResultAsync<PartnerResponse, ParafinErrorType>,
+    ResultAsync<BusinessCoreResponse[], ParafinErrorType>,
+    ResultAsync<BusinessDetailsResponse[], ParafinErrorType>,
+    ResultAsync<OfferCollectionResponse, ParafinErrorType>,
+    ResultAsync<CashAdvanceResponse, ParafinErrorType>,
+    ResultAsync<OptInResponse, ParafinErrorType>,
   ],
-  ParafinError
+  ParafinErrorType
 > {
   const requests = endpoints.map((endpoint) =>
     axios.get(`${config.environment}/${endpoint}`, {
@@ -63,12 +63,12 @@ function combine(
         optIn: AxiosResponse,
       ) => {
         const merge: [
-          ResultAsync<PartnerResponse, ParafinError>,
-          ResultAsync<BusinessCoreResponse[], ParafinError>,
-          ResultAsync<BusinessDetailsResponse[], ParafinError>,
-          ResultAsync<OfferCollectionResponse, ParafinError>,
-          ResultAsync<CashAdvanceResponse, ParafinError>,
-          ResultAsync<OptInResponse, ParafinError>,
+          ResultAsync<PartnerResponse, ParafinErrorType>,
+          ResultAsync<BusinessCoreResponse[], ParafinErrorType>,
+          ResultAsync<BusinessDetailsResponse[], ParafinErrorType>,
+          ResultAsync<OfferCollectionResponse, ParafinErrorType>,
+          ResultAsync<CashAdvanceResponse, ParafinErrorType>,
+          ResultAsync<OptInResponse, ParafinErrorType>,
         ] = [
           partnerResponse(partner),
           businessCoreResponse(businessCores),
@@ -89,7 +89,7 @@ function combine(
 function get(
   endpoint: string,
   config: ClientConfig,
-): ResultAsync<AxiosResponse<any>, ParafinError> {
+): ResultAsync<AxiosResponse<any>, ParafinErrorType> {
   const request = axios.get(`${config.environment}/${endpoint}`, {
     headers: {
       authorization: formatToken(config.token),
@@ -103,7 +103,7 @@ function post(
   endpoint: string,
   config: ClientConfig,
   data: BasicRequest,
-): ResultAsync<AxiosResponse<any>, ParafinError> {
+): ResultAsync<AxiosResponse<any>, ParafinErrorType> {
   const client = caseConverter(axios.create())
   const request = client.post(`${config.environment}/${endpoint}`, data, {
     headers: {

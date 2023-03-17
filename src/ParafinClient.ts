@@ -18,20 +18,20 @@ import {
   CashAdvanceResponse,
   CashAdvanceStateResponse,
   ClientConfig,
-  defaultDisplayMessage,
-  environment,
   OfferCollectionResponse,
-  Ok,
   OptInRequest,
   OptInResponse,
   OptOutRequest,
-  ParafinError,
+  ParafinErrorType,
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  returnOrThrow,
-  ResultAsync,
 } from './types'
+import { ResultAsync } from './responses/ResultAsync'
+import { defaultDisplayMessage, ParafinError } from './responses/ParafinError'
+import { environment } from './helpers/environment'
+import { returnOrThrow } from './responses'
+import { Ok } from './responses/Ok'
 
 class Client {
   config: ClientConfig
@@ -72,7 +72,7 @@ class Client {
     }
   }
 
-  async dataByBusiness(businessId: string): Promise<Ok<ParafinResponse, ParafinError>> {
+  async dataByBusiness(businessId: string): Promise<Ok<ParafinResponse, ParafinErrorType>> {
     return combine(
       this.config,
       { business_id: businessId },
@@ -87,7 +87,7 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async data(): Promise<Ok<ParafinResponse[], ParafinError>> {
+  async data(): Promise<Ok<ParafinResponse[], ParafinErrorType>> {
     const bizCores = await this.businessCores()
 
     const output = await Promise.all(
@@ -100,29 +100,29 @@ class Client {
     return ResultAsync.fromPromise(promisify(output), handleParafinError).then(returnOrThrow)
   }
 
-  async partner(): Promise<Ok<PartnerResponse, ParafinError>> {
+  async partner(): Promise<Ok<PartnerResponse, ParafinErrorType>> {
     return get('partners', this.config).andThen(partnerResponse).then(returnOrThrow)
   }
 
-  async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinError>> {
+  async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinErrorType>> {
     return get('business_cores', this.config).andThen(businessCoreResponse).then(returnOrThrow)
   }
 
-  async businessDetails(): Promise<Ok<BusinessDetailsResponse[], ParafinError>> {
+  async businessDetails(): Promise<Ok<BusinessDetailsResponse[], ParafinErrorType>> {
     return get('businesses', this.config).andThen(businessDetailsResponse).then(returnOrThrow)
   }
 
-  async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinError>> {
+  async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinErrorType>> {
     return get('cash_advance_offer_collections', this.config)
       .andThen(offerCollectionResponse)
       .then(returnOrThrow)
   }
 
-  async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinError>> {
+  async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinErrorType>> {
     return get('cash_advances', this.config).andThen(cashAdvanceResponse).then(returnOrThrow)
   }
 
-  async cashAdvanceStates(): Promise<Ok<CashAdvanceStateResponse[], ParafinError>> {
+  async cashAdvanceStates(): Promise<Ok<CashAdvanceStateResponse[], ParafinErrorType>> {
     const data = await this.data()
 
     const output = data.value.map((biz) => {
@@ -135,15 +135,15 @@ class Client {
     return ResultAsync.fromPromise(promisify(output), handleParafinError).then(returnOrThrow)
   }
 
-  async optIn(): Promise<Ok<OptInResponse, ParafinError>> {
+  async optIn(): Promise<Ok<OptInResponse, ParafinErrorType>> {
     return get('opt_ins', this.config).andThen(optInResponse).then(returnOrThrow)
   }
 
-  async postOptIn(data: OptInRequest): Promise<Ok<PostResponse, ParafinError>> {
+  async postOptIn(data: OptInRequest): Promise<Ok<PostResponse, ParafinErrorType>> {
     return post('opt_ins', this.config, data).andThen(postResponse).then(returnOrThrow)
   }
 
-  async postOptOut(data: OptOutRequest): Promise<Ok<PostResponse, ParafinError>> {
+  async postOptOut(data: OptOutRequest): Promise<Ok<PostResponse, ParafinErrorType>> {
     return post('opt_out', this.config, data).andThen(postResponse).then(returnOrThrow)
   }
 }
