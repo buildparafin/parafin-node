@@ -28,9 +28,9 @@ import {
   PostResponse,
 } from './types'
 import { ResultAsync } from './responses/ResultAsync'
-import { defaultDisplayMessage, ParafinError } from './responses/ParafinError'
+import { ParafinError } from './responses/ParafinError'
 import { environment } from './helpers/environment'
-import { returnOrThrow } from './responses'
+import { defaultDisplayMessage, returnOrThrow } from './responses'
 import { Ok } from './responses/Ok'
 
 class Client {

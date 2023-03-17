@@ -1,4 +1,4 @@
-import { defaultDisplayMessage } from '../responses/ParafinError'
+import { defaultDisplayMessage } from '../responses'
 import { ParafinError } from '../responses/ParafinError'
 
 export function handleParafinError(error: any): ParafinError {

@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios'
-import { defaultDisplayMessage, ParafinError } from '../responses/ParafinError'
+import { defaultDisplayMessage } from '../responses'
+import { ParafinError } from '../responses/ParafinError'
 import { ResultAsync } from '../responses/ResultAsync'
 import {
   BusinessCoreResponse,

@@ -1,7 +1,8 @@
+import { defaultDisplayMessage } from '.'
 import { Result } from '../types/index'
 import { Err } from './Err'
 import { Ok } from './Ok'
-import { defaultDisplayMessage, ParafinError } from './ParafinError'
+import { ParafinError } from './ParafinError'
 
 export class ResultAsync<T, E> implements Promise<Result<T, E>> {
   private _promise: Promise<Result<T, E>>
