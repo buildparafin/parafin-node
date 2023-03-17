@@ -1,17 +1,13 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint"],
   "env": {
     "es6": true,
     "node": true,
     "mocha": true
   },
-  "extends": [
-    "plugin:prettier/recommended"
-  ],
+  "extends": ["eslint-config-prettier"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
@@ -32,8 +28,6 @@
         "before": true
       }
     ],
-    "space-before-blocks": [
-      "error"
-    ]
+    "space-before-blocks": ["error"]
   }
 }
