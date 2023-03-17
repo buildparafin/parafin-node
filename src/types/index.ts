@@ -201,7 +201,7 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
       display_message: defaultDisplayMessage,
     })
   }
-  [Symbol.toStringTag]: string
+  [Symbol.toStringTag]!: string
 
   static fromSafePromise<T, E>(promise: Promise<T>): ResultAsync<T, E> {
     const newPromise = promise.then((value: T) => new Ok<T, E>(value))
