@@ -10,7 +10,7 @@ import {
   ParafinResponse,
   PartnerResponse,
   PostResponse,
-  ResultAsync
+  ResultAsync,
 } from '../types'
 
 export const promisify = <T>(value: T): Promise<T> =>
@@ -22,7 +22,7 @@ export const handleParafinError = (error: any): ParafinError =>
   new ParafinError({
     error_type: 'RESPONSE_MANAGER_ERROR',
     error_message: 'Unable to process a response',
-    display_message: defaultDisplayMessage
+    display_message: defaultDisplayMessage,
   })
 
 function baseResponse(response: AxiosResponse) {
@@ -41,14 +41,12 @@ function baseResponse(response: AxiosResponse) {
   return results
 }
 
-function partnerResponse(
-  partner: AxiosResponse
-): ResultAsync<PartnerResponse, ParafinError> {
+function partnerResponse(partner: AxiosResponse): ResultAsync<PartnerResponse, ParafinError> {
   const results = baseResponse(partner)
   const response: PartnerResponse = {
     partnerId: null,
     partnerName: null,
-    partnerSlug: null
+    partnerSlug: null,
   }
 
   if (results != null && results.length > 0) {
@@ -61,7 +59,7 @@ function partnerResponse(
 }
 
 function businessDetailsResponse(
-  businessDetails: AxiosResponse
+  businessDetails: AxiosResponse,
 ): ResultAsync<BusinessDetailsResponse[], ParafinError> {
   const results = baseResponse(businessDetails)
   const response: BusinessDetailsResponse[] = []
@@ -70,7 +68,7 @@ function businessDetailsResponse(
     results.map((bizDetails: any) => {
       response.push({
         legalBusinessName: bizDetails.legal_business_name,
-        name: bizDetails.name
+        name: bizDetails.name,
       })
     })
   }
@@ -79,7 +77,7 @@ function businessDetailsResponse(
 }
 
 function businessCoreResponse(
-  businessCores: AxiosResponse
+  businessCores: AxiosResponse,
 ): ResultAsync<BusinessCoreResponse[], ParafinError> {
   const results = baseResponse(businessCores)
   const response: BusinessCoreResponse[] = []
@@ -88,7 +86,7 @@ function businessCoreResponse(
     results.map((bizCore: any) => {
       response.push({
         businessId: bizCore.id,
-        externalId: bizCore.external_id
+        externalId: bizCore.external_id,
       })
     })
   }
@@ -103,11 +101,7 @@ type Discount = {
   fee_multiplier_factor: string | null
 }
 
-function getDiscountAmount(
-  discount: Discount | null,
-  fee: number,
-  amount: number
-) {
+function getDiscountAmount(discount: Discount | null, fee: number, amount: number) {
   const multiplier = discount?.multiplier || discount?.fee_multiplier_factor
 
   if (!discount || !multiplier) {
@@ -116,19 +110,18 @@ function getDiscountAmount(
 
   const TYPE = discount?.multiplier ? 'Multiplier' : 'Factor'
 
-  const discountMultiplier =
-    TYPE === 'Multiplier' ? +multiplier : +multiplier * fee
+  const discountMultiplier = TYPE === 'Multiplier' ? +multiplier : +multiplier * fee
 
   return Math.round(discountMultiplier * amount)
 }
 
 function offerCollectionResponse(
-  offerCollection: AxiosResponse
+  offerCollection: AxiosResponse,
 ): ResultAsync<OfferCollectionResponse, ParafinError> {
   const results = baseResponse(offerCollection)
   const response: OfferCollectionResponse = {
     approvalAmount: null,
-    discountAmount: null
+    discountAmount: null,
   }
 
   if (results != null && results.length > 0) {
@@ -161,15 +154,15 @@ function offerCollectionResponse(
           discountAmount: getDiscountAmount(
             results[0].discounts[0],
             +offerChunk.fee_multiplier,
-            maxOfferAmount
+            maxOfferAmount,
           ),
-          maxOfferAmount
+          maxOfferAmount,
         }
       },
       {
         discountAmount: 0,
-        maxOfferAmount: 0
-      }
+        maxOfferAmount: 0,
+      },
     )
 
     const { discountAmount, maxOfferAmount } = amounts
@@ -186,7 +179,7 @@ function offerCollectionResponse(
 }
 
 function cashAdvanceResponse(
-  cashAdvance: AxiosResponse
+  cashAdvance: AxiosResponse,
 ): ResultAsync<CashAdvanceResponse, ParafinError> {
   const results = baseResponse(cashAdvance)
   const response: CashAdvanceResponse = {
@@ -195,16 +188,14 @@ function cashAdvanceResponse(
     paidAmount: null,
     estimatedPayoffDate: null,
     verified: null,
-    totalAdvances: null
+    totalAdvances: null,
   }
 
   if (results != null && results.length > 0) {
     response.totalAdvances = results.length
 
     // The API returns only non-void states of cash advances
-    const outstandingAdvances = results.filter(
-      (element: any) => element.state === 'outstanding'
-    )
+    const outstandingAdvances = results.filter((element: any) => element.state === 'outstanding')
     if (!outstandingAdvances.length) {
       return ResultAsync.fromPromise(promisify(response), handleParafinError)
     }
@@ -224,12 +215,10 @@ function cashAdvanceResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function optInResponse(
-  optIn: AxiosResponse
-): ResultAsync<OptInResponse, ParafinError> {
+function optInResponse(optIn: AxiosResponse): ResultAsync<OptInResponse, ParafinError> {
   const results = baseResponse(optIn)
   const response: OptInResponse = {
-    opted: null
+    opted: null,
   }
 
   if (results != null) {
@@ -243,13 +232,11 @@ function optInResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
-function postResponse(
-  postResponse: AxiosResponse
-): ResultAsync<PostResponse, ParafinError> {
+function postResponse(postResponse: AxiosResponse): ResultAsync<PostResponse, ParafinError> {
   const response: PostResponse = {
     status: 0,
     statusText: '',
-    data: ''
+    data: '',
   }
 
   if (postResponse == null || postResponse == undefined) {
@@ -270,8 +257,8 @@ function parafinResponse(
     ResultAsync<BusinessDetailsResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
-    ResultAsync<OptInResponse, ParafinError>
-  ]
+    ResultAsync<OptInResponse, ParafinError>,
+  ],
 ): ResultAsync<ParafinResponse, ParafinError> {
   const response: ParafinResponse = {
     opted: null,
@@ -289,7 +276,7 @@ function parafinResponse(
     verified: null,
     totalAdvances: null,
     legalBusinessName: null,
-    name: null
+    name: null,
   }
 
   mergedResultAsync[0].then((res) => {
@@ -352,5 +339,5 @@ export {
   optInResponse,
   postResponse,
   parafinResponse,
-  getDiscountAmount
+  getDiscountAmount,
 }

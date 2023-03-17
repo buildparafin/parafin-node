@@ -42,12 +42,7 @@ export interface ParafinResponse
     CashAdvanceResponse,
     OptInResponse {}
 
-export type CashAdvanceState =
-  | 'no_offer'
-  | 'offer'
-  | 'pending'
-  | 'advance'
-  | null
+export type CashAdvanceState = 'no_offer' | 'offer' | 'pending' | 'advance' | null
 
 export interface CashAdvanceStateResponse extends BasicResponse {
   businessExternalId: string
@@ -127,8 +122,7 @@ export interface ParafinErrorType {
   status_text?: string
 }
 
-export const defaultDisplayMessage =
-  'We are looking into this issue! Please try again later.'
+export const defaultDisplayMessage = 'We are looking into this issue! Please try again later.'
 const statusCodeToDisplayMessage = new Map<number, string>([
   [200, 'Success!'],
   [201, 'Success!'],
@@ -142,7 +136,7 @@ const statusCodeToDisplayMessage = new Map<number, string>([
   [501, 'This is an issue on our end. We are looking into it!'],
   [502, 'This is an issue on our end. We are looking into it!'],
   [503, 'This is an issue on our end. We are looking into it!'],
-  [504, 'This is an issue on our end. We are looking into it!']
+  [504, 'This is an issue on our end. We are looking into it!'],
 ])
 
 export function handleParafinError(error: any): ParafinError {
@@ -152,19 +146,19 @@ export function handleParafinError(error: any): ParafinError {
       status_code: error.response.status,
       status_text: String(error.response.statusText),
       error_message: String(error.response.data),
-      display_message: defaultDisplayMessage
+      display_message: defaultDisplayMessage,
     })
   } else if (error != null && error != undefined && error.request) {
     return new ParafinError({
       error_type: 'API_ERROR_REQUEST',
       error_message: 'The request was made but no response was received',
-      display_message: defaultDisplayMessage
+      display_message: defaultDisplayMessage,
     })
   } else {
     return new ParafinError({
       error_type: 'API_ERROR_GENERIC',
       error_message: 'Generic Parafin error',
-      display_message: defaultDisplayMessage
+      display_message: defaultDisplayMessage,
     })
   }
 }
@@ -191,12 +185,12 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
   }
 
   catch<TResult = never>(
-    _onrejected?: ((reason: any) => TResult | Promise<TResult>) | null
+    _onrejected?: ((reason: any) => TResult | Promise<TResult>) | null,
   ): Promise<Result<T, E> | TResult> {
     throw new ParafinError({
       error_type: 'RESULT_ASYNC_ERROR',
       error_message: 'Catch statement was triggered',
-      display_message: defaultDisplayMessage
+      display_message: defaultDisplayMessage,
     })
   }
 
@@ -204,7 +198,7 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
     throw new ParafinError({
       error_type: 'RESULT_ASYNC_ERROR',
       error_message: 'Finally statement was triggered',
-      display_message: defaultDisplayMessage
+      display_message: defaultDisplayMessage,
     })
   }
   [Symbol.toStringTag]: string
@@ -215,10 +209,7 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
     return new ResultAsync(newPromise)
   }
 
-  static fromPromise<T, E>(
-    promise: Promise<T>,
-    errorFn: (e: any) => E
-  ): ResultAsync<T, E> {
+  static fromPromise<T, E>(promise: Promise<T>, errorFn: (e: any) => E): ResultAsync<T, E> {
     const newPromise = promise
       .then((value: T) => new Ok<T, E>(value))
       .catch((e) => new Err<T, E>(errorFn(e)))
@@ -234,7 +225,7 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
         }
 
         return new Ok<A, E>(await f(res.value))
-      })
+      }),
     )
   }
 
@@ -246,7 +237,7 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
         }
 
         return new Err<T, U>(await f(res.error))
-      })
+      }),
     )
   }
 
@@ -256,14 +247,12 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
 
   then<A, B>(
     successCallback?: (res: Result<T, E>) => A | Promise<A>,
-    failureCallback?: (reason: unknown) => B | Promise<B>
+    failureCallback?: (reason: unknown) => B | Promise<B>,
   ): Promise<A | B> {
     return this._promise.then(successCallback, failureCallback)
   }
 
-  andThen<U, F>(
-    f: (t: T) => Result<U, F> | ResultAsync<U, F>
-  ): ResultAsync<U, E | F> {
+  andThen<U, F>(f: (t: T) => Result<U, F> | ResultAsync<U, F>): ResultAsync<U, E | F> {
     return new ResultAsync(
       this._promise.then((res) => {
         if (res.isErr()) {
@@ -273,7 +262,7 @@ export class ResultAsync<T, E> implements Promise<Result<T, E>> {
         const newValue = f(res.value)
 
         return newValue instanceof ResultAsync ? newValue._promise : newValue
-      })
+      }),
     )
   }
 }
@@ -328,5 +317,5 @@ export class Err<T, E> {
 
 export const environment = {
   production: 'https://api.parafin.com',
-  development: 'https://api.dev.parafin.com'
+  development: 'https://api.dev.parafin.com',
 }
