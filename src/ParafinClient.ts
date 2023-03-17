@@ -87,7 +87,7 @@ class Client {
       .then(returnOrThrow)
   }
 
-  async data(): Promise<Ok<ParafinResponse[], ParafinErrorType>> {
+  async data(): Promise<Ok<ParafinResponse[], ParafinError>> {
     const bizCores = await this.businessCores()
 
     const output = await Promise.all(
@@ -100,29 +100,29 @@ class Client {
     return ResultAsync.fromPromise(promisify(output), handleParafinError).then(returnOrThrow)
   }
 
-  async partner(): Promise<Ok<PartnerResponse, ParafinErrorType>> {
+  async partner(): Promise<Ok<PartnerResponse, ParafinError>> {
     return get('partners', this.config).andThen(partnerResponse).then(returnOrThrow)
   }
 
-  async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinErrorType>> {
+  async businessCores(): Promise<Ok<BusinessCoreResponse[], ParafinError>> {
     return get('business_cores', this.config).andThen(businessCoreResponse).then(returnOrThrow)
   }
 
-  async businessDetails(): Promise<Ok<BusinessDetailsResponse[], ParafinErrorType>> {
+  async businessDetails(): Promise<Ok<BusinessDetailsResponse[], ParafinError>> {
     return get('businesses', this.config).andThen(businessDetailsResponse).then(returnOrThrow)
   }
 
-  async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinErrorType>> {
+  async offerCollection(): Promise<Ok<OfferCollectionResponse, ParafinError>> {
     return get('cash_advance_offer_collections', this.config)
       .andThen(offerCollectionResponse)
       .then(returnOrThrow)
   }
 
-  async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinErrorType>> {
+  async cashAdvance(): Promise<Ok<CashAdvanceResponse, ParafinError>> {
     return get('cash_advances', this.config).andThen(cashAdvanceResponse).then(returnOrThrow)
   }
 
-  async cashAdvanceStates(): Promise<Ok<CashAdvanceStateResponse[], ParafinErrorType>> {
+  async cashAdvanceStates(): Promise<Ok<CashAdvanceStateResponse[], ParafinError>> {
     const data = await this.data()
 
     const output = data.value.map((biz) => {
@@ -135,15 +135,15 @@ class Client {
     return ResultAsync.fromPromise(promisify(output), handleParafinError).then(returnOrThrow)
   }
 
-  async optIn(): Promise<Ok<OptInResponse, ParafinErrorType>> {
+  async optIn(): Promise<Ok<OptInResponse, ParafinError>> {
     return get('opt_ins', this.config).andThen(optInResponse).then(returnOrThrow)
   }
 
-  async postOptIn(data: OptInRequest): Promise<Ok<PostResponse, ParafinErrorType>> {
+  async postOptIn(data: OptInRequest): Promise<Ok<PostResponse, ParafinError>> {
     return post('opt_ins', this.config, data).andThen(postResponse).then(returnOrThrow)
   }
 
-  async postOptOut(data: OptOutRequest): Promise<Ok<PostResponse, ParafinErrorType>> {
+  async postOptOut(data: OptOutRequest): Promise<Ok<PostResponse, ParafinError>> {
     return post('opt_out', this.config, data).andThen(postResponse).then(returnOrThrow)
   }
 }
