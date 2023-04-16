@@ -249,13 +249,11 @@ function businessGroupsResponse(
 ): ResultAsync<BusinessGroupsResponse, ParafinError> {
   const results = baseResponse(optIn)
   const response: BusinessGroupsResponse = {
-    // businessId: null,
     groups: [],
     subgroups: []
   }
 
   if (results != null && results.length > 0) {
-    // response.businessId = results[0].business_id
     response.groups = results[0].groups
     response.subgroups = results[0].subgroups
   }
@@ -311,8 +309,8 @@ function parafinResponse(
     totalAdvances: null,
     legalBusinessName: null,
     name: null,
-    groups: [],
-    subgroups: []
+    groups: null,
+    subgroups: null
   }
 
   mergedResultAsync[0].then((res) => {

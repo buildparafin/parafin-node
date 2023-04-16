@@ -35,8 +35,8 @@ export interface OptInResponse extends BasicResponse {
 }
 
 export interface BusinessGroupsResponse extends BasicResponse {
-  groups: string[]
-  subgroups: string[]
+  groups: string[] | null
+  subgroups: string[] | null
 }
 
 export interface ParafinResponse
