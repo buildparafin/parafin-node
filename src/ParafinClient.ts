@@ -81,7 +81,8 @@ class Client {
       'businesses',
       'cash_advance_offer_collections',
       'cash_advances',
-      'opt_ins'
+      'opt_ins',
+      'card/groups'
     )
       .andThen(parafinResponse)
       .then(returnOrThrow)

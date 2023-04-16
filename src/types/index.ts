@@ -34,13 +34,19 @@ export interface OptInResponse extends BasicResponse {
   opted: boolean | null
 }
 
+export interface BusinessGroupsResponse extends BasicResponse {
+  groups: string[]
+  subgroups: string[]
+}
+
 export interface ParafinResponse
   extends PartnerResponse,
     BusinessCoreResponse,
     BusinessDetailsResponse,
     OfferCollectionResponse,
     CashAdvanceResponse,
-    OptInResponse {}
+    OptInResponse,
+    BusinessGroupsResponse {}
 
 export type CashAdvanceState =
   | 'no_offer'
