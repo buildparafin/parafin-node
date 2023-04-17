@@ -361,6 +361,13 @@ function parafinResponse(
     }
   })
 
+  mergedResultAsync[6].then((res) => {
+    if (res.isOk()) {
+      response.groups = res.value.groups
+      response.subgroups = res.value.subgroups
+    }
+  })
+
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
