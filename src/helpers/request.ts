@@ -7,13 +7,15 @@ import {
   cashAdvanceResponse,
   offerCollectionResponse,
   partnerResponse,
-  optInResponse
+  optInResponse,
+  businessGroupsResponse
 } from './responseManager'
 
 import {
   BasicRequest,
   BusinessCoreResponse,
   BusinessDetailsResponse,
+  BusinessGroupsResponse,
   CashAdvanceResponse,
   ClientConfig,
   handleParafinError,
@@ -39,7 +41,8 @@ function combine(
     ResultAsync<BusinessDetailsResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
-    ResultAsync<OptInResponse, ParafinError>
+    ResultAsync<OptInResponse, ParafinError>,
+    ResultAsync<BusinessGroupsResponse, ParafinError>
   ],
   ParafinError
 > {
@@ -60,7 +63,8 @@ function combine(
         businessDetails: AxiosResponse,
         offerCollection: AxiosResponse,
         cashAdvance: AxiosResponse,
-        optIn: AxiosResponse
+        optIn: AxiosResponse,
+        businessGroups: AxiosResponse
       ) => {
         const merge: [
           ResultAsync<PartnerResponse, ParafinError>,
@@ -68,14 +72,16 @@ function combine(
           ResultAsync<BusinessDetailsResponse[], ParafinError>,
           ResultAsync<OfferCollectionResponse, ParafinError>,
           ResultAsync<CashAdvanceResponse, ParafinError>,
-          ResultAsync<OptInResponse, ParafinError>
+          ResultAsync<OptInResponse, ParafinError>,
+          ResultAsync<BusinessGroupsResponse, ParafinError>
         ] = [
           partnerResponse(partner),
           businessCoreResponse(businessCores),
           businessDetailsResponse(businessDetails),
           offerCollectionResponse(offerCollection),
           cashAdvanceResponse(cashAdvance),
-          optInResponse(optIn)
+          optInResponse(optIn),
+          businessGroupsResponse(businessGroups)
         ]
 
         return merge

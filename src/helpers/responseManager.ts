@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 import {
   BusinessCoreResponse,
   BusinessDetailsResponse,
+  BusinessGroupsResponse,
   CashAdvanceResponse,
   defaultDisplayMessage,
   OfferCollectionResponse,
@@ -243,6 +244,23 @@ function optInResponse(
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
+function businessGroupsResponse(
+  optIn: AxiosResponse
+): ResultAsync<BusinessGroupsResponse, ParafinError> {
+  const results = baseResponse(optIn)
+  const response: BusinessGroupsResponse = {
+    groups: [],
+    subgroups: []
+  }
+
+  if (results != null && results.length > 0) {
+    response.groups = results[0].groups
+    response.subgroups = results[0].subgroups
+  }
+
+  return ResultAsync.fromPromise(promisify(response), handleParafinError)
+}
+
 function postResponse(
   postResponse: AxiosResponse
 ): ResultAsync<PostResponse, ParafinError> {
@@ -270,7 +288,8 @@ function parafinResponse(
     ResultAsync<BusinessDetailsResponse[], ParafinError>,
     ResultAsync<OfferCollectionResponse, ParafinError>,
     ResultAsync<CashAdvanceResponse, ParafinError>,
-    ResultAsync<OptInResponse, ParafinError>
+    ResultAsync<OptInResponse, ParafinError>,
+    ResultAsync<BusinessGroupsResponse, ParafinError>
   ]
 ): ResultAsync<ParafinResponse, ParafinError> {
   const response: ParafinResponse = {
@@ -289,7 +308,9 @@ function parafinResponse(
     verified: null,
     totalAdvances: null,
     legalBusinessName: null,
-    name: null
+    name: null,
+    groups: null,
+    subgroups: null
   }
 
   mergedResultAsync[0].then((res) => {
@@ -340,6 +361,13 @@ function parafinResponse(
     }
   })
 
+  mergedResultAsync[6].then((res) => {
+    if (res.isOk()) {
+      response.groups = res.value.groups
+      response.subgroups = res.value.subgroups
+    }
+  })
+
   return ResultAsync.fromPromise(promisify(response), handleParafinError)
 }
 
@@ -350,6 +378,7 @@ export {
   offerCollectionResponse,
   cashAdvanceResponse,
   optInResponse,
+  businessGroupsResponse,
   postResponse,
   parafinResponse,
   getDiscountAmount
